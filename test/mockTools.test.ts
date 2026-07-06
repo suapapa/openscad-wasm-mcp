@@ -74,6 +74,15 @@ describe('mock tool handlers', () => {
     expect(result.ok).toBe(true);
     expect(result.artifact?.format).toBe('stl');
     expect(result.artifact?.sha256).toHaveLength(64);
+    expect(result.previewUrl).toMatch(/\/viewer\/[0-9a-f-]{36}$/);
+    expect(result.modelUrl).toMatch(/\/preview\/[0-9a-f-]{36}\/model\.stl$/);
+    expect(result.expiresAt).toBeTruthy();
+  });
+
+  it('does not attach preview links for non-STL exports', async () => {
+    const result = await handleExportModel({ scad: 'cube(1);', format: 'off' }, deps);
+    expect(result.ok).toBe(true);
+    expect(result.previewUrl).toBeUndefined();
   });
 
   it('renders a WebP preview from the mock STL export', async () => {
@@ -90,6 +99,7 @@ describe('mock tool handlers', () => {
 
     const stats = await sharp(artifact).stats();
     expect(stats.channels.some((channel) => channel.stdev > 0)).toBe(true);
+    expect(result.previewUrl).toMatch(/\/viewer\//);
   });
 
   it('analyzes STL triangle count and bounding box through mock export', async () => {
@@ -98,6 +108,7 @@ describe('mock tool handlers', () => {
     expect(result.summary.triangleCount).toBe(2);
     expect(result.summary.boundingBox).toEqual({ min: [0, 0, 0], max: [1, 1, 0] });
     expect(result.summary.artifact?.format).toBe('stl');
+    expect(result.previewUrl).toMatch(/\/viewer\//);
   });
 });
 

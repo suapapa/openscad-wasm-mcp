@@ -106,10 +106,10 @@ Preserve these constraints when adding tools or options:
 ## Tool Behavior Expectations
 
 - `openscad_validate`: returns `ok`, `diagnostics`, `stdout`, `stderr`, `elapsedMs`.
-- `openscad_export_model`: returns artifact metadata for `stl`, `3mf`, `off`, `csg`, `dxf`, or `svg`.
-- `openscad_render_preview`: exports STL and renders a server-side WebP mesh preview.
+- `openscad_export_model`: returns artifact metadata for `stl`, `3mf`, `off`, `csg`, `dxf`, or `svg`. STL exports also include `previewUrl`, `modelUrl`, and `expiresAt` when preview links are enabled.
+- `openscad_render_preview`: exports STL and renders a server-side WebP mesh preview. Also returns interactive 3D preview link fields when preview links are enabled.
 - `openscad_create_preview_link`: returns `previewUrl`, `modelUrl`, and `expiresAt` for an interactive browser STL viewer on the same HTTP server.
-- `openscad_analyze_model`: exports STL first, then computes bbox and triangle count from ASCII/binary STL.
+- `openscad_analyze_model`: exports STL first, then computes bbox and triangle count from ASCII/binary STL. Also returns interactive 3D preview link fields when preview links are enabled.
 - Workspace tools must never read, write, list, or delete outside `WORKSPACE_DIR`.
 
 MCP responses should include both text content and structured content when practical.

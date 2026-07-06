@@ -3,8 +3,8 @@ import { readFile, stat } from 'node:fs/promises';
 import path from 'node:path';
 import * as z from 'zod/v4';
 import { mimeTypeForFormat } from '../openscad/formats.js';
+import { attachStlPreviewLink } from '../preview/attachPreviewLink.js';
 import { resolveSafePath } from '../workspace/safePaths.js';
-import { previewUrls } from '../server/previewRoutes.js';
 import type { PreviewLinkToolResult } from '../types/toolResults.js';
 import type { ToolDependencies } from './index.js';
 import { definesSchema, filesSchema } from './validate.js';
@@ -118,10 +118,6 @@ async function createPreviewFromScad(
 
     return registerPreviewLink({
       deps,
-      absolutePath: await resolveSafePath(deps.config.paths.workspaceDir, artifact.path, {
-        allowedExtensions: STL_EXTENSIONS,
-        mustExist: true
-      }),
       artifact,
       diagnostics: result.diagnostics,
       stdout: result.stdout,
@@ -145,7 +141,6 @@ async function createPreviewFromWorkspacePath(
 
   return registerPreviewLink({
     deps,
-    absolutePath,
     artifact: {
       path: workspacePath,
       filename: path.basename(absolutePath),
@@ -181,7 +176,6 @@ async function createPreviewFromArtifactPath(
 
   return registerPreviewLink({
     deps,
-    absolutePath,
     artifact: {
       path: artifactPath,
       filename: path.basename(absolutePath),
@@ -199,7 +193,6 @@ async function createPreviewFromArtifactPath(
 
 async function registerPreviewLink(input: {
   deps: ToolDependencies;
-  absolutePath: string;
   artifact: {
     path: string;
     filename: string;
@@ -213,19 +206,16 @@ async function registerPreviewLink(input: {
   stderr: string;
   elapsedMs: number;
 }): Promise<PreviewLinkToolResult> {
-  const { token, expiresAt } = input.deps.previewTokens.register({
-    absolutePath: input.absolutePath,
-    format: 'stl',
-    mimeType: mimeTypeForFormat('stl')
-  });
-
-  const urls = previewUrls(input.deps.config.preview.publicBaseUrl, token);
+  const preview = await attachStlPreviewLink(input.deps, input.artifact);
+  if (!preview) {
+    throw new Error('Failed to create preview link for STL artifact.');
+  }
 
   return {
     ok: true,
-    previewUrl: urls.previewUrl,
-    modelUrl: urls.modelUrl,
-    expiresAt: expiresAt.toISOString(),
+    previewUrl: preview.previewUrl,
+    modelUrl: preview.modelUrl,
+    expiresAt: preview.expiresAt,
     format: 'stl',
     artifact: input.artifact,
     diagnostics: input.diagnostics,

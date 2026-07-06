@@ -141,6 +141,8 @@ Use `openscad_create_preview_link` with exactly one of:
 
 The tool returns `previewUrl`, `modelUrl`, and `expiresAt`. Open `previewUrl` in a browser while the server is running. Configure `PUBLIC_BASE_URL` when the server is reached through a reverse proxy or a non-default host/port.
 
+`openscad_export_model` (STL only), `openscad_render_preview`, and `openscad_analyze_model` also include the same preview link fields automatically when `PREVIEW_ENABLED=true`.
+
 ## Artifact Output
 
 Artifacts are written under `/workspace/artifacts` inside the container and `./workspace/artifacts` on the host. MCP responses include:

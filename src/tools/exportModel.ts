@@ -1,5 +1,6 @@
 import * as z from 'zod/v4';
 import { EXPORT_FORMATS } from '../openscad/formats.js';
+import { attachStlPreviewLink } from '../preview/attachPreviewLink.js';
 import type { ExportToolResult } from '../types/toolResults.js';
 import type { ToolDependencies } from './index.js';
 import { definesSchema, filesSchema } from './validate.js';
@@ -52,9 +53,12 @@ export async function handleExportModel(
         data: result.data
       });
 
+      const preview = await attachStlPreviewLink(deps, artifact);
+
       return {
         ok: true,
         artifact,
+        ...preview,
         diagnostics: result.diagnostics,
         stdout: result.stdout,
         stderr: result.stderr,

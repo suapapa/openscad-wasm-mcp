@@ -1,4 +1,5 @@
 import * as z from 'zod/v4';
+import { attachStlPreviewLink } from '../preview/attachPreviewLink.js';
 import type { AnalyzeToolResult } from '../types/toolResults.js';
 import type { ToolDependencies } from './index.js';
 import { definesSchema, filesSchema } from './validate.js';
@@ -62,6 +63,7 @@ export async function handleAnalyzeModel(
         parseStlGeometry(result.data),
         geometryFromOpenScadSummary(result.summary)
       );
+      const preview = await attachStlPreviewLink(deps, artifact);
 
       return {
         ok: true,
@@ -69,6 +71,7 @@ export async function handleAnalyzeModel(
           ...geometry,
           artifact
         },
+        ...preview,
         diagnostics: result.diagnostics,
         stdout: result.stdout,
         stderr: result.stderr,

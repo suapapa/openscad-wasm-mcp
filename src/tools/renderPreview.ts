@@ -1,5 +1,6 @@
 import * as z from 'zod/v4';
 import { formatPreviewCamera } from '../openscad/args.js';
+import { attachStlPreviewLink } from '../preview/attachPreviewLink.js';
 import { renderStlPreviewToWebp } from '../preview/StlPreviewRenderer.js';
 import { assertWithinBytes } from '../security/limits.js';
 import type { ExportToolResult } from '../types/toolResults.js';
@@ -71,6 +72,16 @@ export async function handleRenderPreview(
           deps.config.limits.maxOutputBytes
         );
 
+        let stlArtifact;
+        if (deps.config.preview.enabled) {
+          stlArtifact = await deps.artifacts.saveArtifact({
+            jobId: job.id,
+            suffix: exportResult.filename,
+            format: 'stl',
+            data: exportResult.data
+          });
+        }
+
         const data = await renderStlPreviewToWebp(exportResult.data, {
           width: input.width,
           height: input.height,
@@ -84,7 +95,8 @@ export async function handleRenderPreview(
           ...exportResult,
           format: 'webp' as const,
           filename: 'output.webp',
-          data
+          data,
+          stlArtifact
         };
       });
 
@@ -92,6 +104,7 @@ export async function handleRenderPreview(
         return result;
       }
 
+      const stlArtifact = 'stlArtifact' in result ? result.stlArtifact : undefined;
       const artifact = await deps.artifacts.saveArtifact({
         jobId: job.id,
         suffix: result.filename,
@@ -99,9 +112,12 @@ export async function handleRenderPreview(
         data: result.data
       });
 
+      const preview = stlArtifact ? await attachStlPreviewLink(deps, stlArtifact) : undefined;
+
       return {
         ok: true,
         artifact,
+        ...preview,
         diagnostics: result.diagnostics,
         stdout: result.stdout,
         stderr: result.stderr,
