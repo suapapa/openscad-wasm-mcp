@@ -79,6 +79,8 @@ describe('preview HTTP routes', () => {
     const viewerResponse = await fetch(result.previewUrl!);
     expect(viewerResponse.status).toBe(200);
     expect(viewerResponse.headers.get('content-type')).toContain('text/html');
+    expect(viewerResponse.headers.get('content-security-policy')).toContain("'self'");
+    expect(viewerResponse.headers.get('content-security-policy')).toContain('https://cdn.jsdelivr.net');
     const viewerHtml = await viewerResponse.text();
     expect(viewerHtml).toContain('OpenSCAD 3D Preview');
     expect(viewerHtml).toContain('Download STL');

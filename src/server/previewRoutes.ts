@@ -42,7 +42,10 @@ export function registerPreviewRoutes(app: Express, deps: ToolDependencies): voi
       token,
       Boolean(entry.scadAbsolutePath)
     );
-    res.setHeader('Content-Security-Policy', "default-src 'none'; script-src 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'unsafe-inline'; connect-src 'self'");
+    res.setHeader(
+      'Content-Security-Policy',
+      "default-src 'none'; script-src 'unsafe-inline' 'self' https://cdn.jsdelivr.net; style-src 'unsafe-inline'; connect-src 'self' https://cdn.jsdelivr.net"
+    );
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.type('html').send(renderViewerPage(modelUrl, scadUrl));
   });
