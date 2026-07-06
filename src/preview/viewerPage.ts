@@ -1,8 +1,10 @@
+const downloadIcon = `<svg class="download-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`;
+
 export function renderViewerPage(modelUrl: string, scadUrl?: string): string {
   const escapedModelUrl = JSON.stringify(modelUrl);
   const escapedScadUrl = scadUrl ? JSON.stringify(scadUrl) : undefined;
   const scadDownloadLink = scadUrl
-    ? `<a class="download" href=${escapedScadUrl} download="model.scad">Download SCAD</a>`
+    ? `<a class="download" href=${escapedScadUrl} download="model.scad" title="Download SCAD" aria-label="Download SCAD">${downloadIcon}<span class="download-label">SCAD</span></a>`
     : '';
 
   return `<!doctype html>
@@ -21,17 +23,20 @@ export function renderViewerPage(modelUrl: string, scadUrl?: string): string {
       display: flex; gap: 8px;
     }
     #downloads .download {
-      padding: 8px 14px; background: rgba(0,0,0,.55); border: 1px solid rgba(255,255,255,.2);
-      border-radius: 6px; font-size: 14px; color: #eee; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 10px; background: rgba(0,0,0,.55); border: 1px solid rgba(255,255,255,.2);
+      border-radius: 6px; font-size: 13px; color: #eee; text-decoration: none;
     }
     #downloads .download:hover { background: rgba(255,255,255,.12); }
+    #downloads .download-icon { display: block; flex-shrink: 0; }
+    #downloads .download-label { font-weight: 500; letter-spacing: 0.02em; }
   </style>
 </head>
 <body>
   <div id="status">Loading model...</div>
   <div id="downloads">
     ${scadDownloadLink}
-    <a class="download" href=${escapedModelUrl} download="model.stl">Download STL</a>
+    <a class="download" href=${escapedModelUrl} download="model.stl" title="Download STL" aria-label="Download STL">${downloadIcon}<span class="download-label">STL</span></a>
   </div>
   <div id="app"></div>
   <script type="importmap">

@@ -83,8 +83,10 @@ describe('preview HTTP routes', () => {
     expect(viewerResponse.headers.get('content-security-policy')).toContain('https://cdn.jsdelivr.net');
     const viewerHtml = await viewerResponse.text();
     expect(viewerHtml).toContain('OpenSCAD 3D Preview');
-    expect(viewerHtml).toContain('Download STL');
-    expect(viewerHtml).toContain('Download SCAD');
+    expect(viewerHtml).toContain('aria-label="Download STL"');
+    expect(viewerHtml).toContain('aria-label="Download SCAD"');
+    expect(viewerHtml).toContain('>STL</span>');
+    expect(viewerHtml).toContain('>SCAD</span>');
     expect(viewerHtml).toContain(result.modelUrl!);
     expect(viewerHtml).toContain(result.scadUrl!);
 
