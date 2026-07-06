@@ -43,6 +43,22 @@ Use Streamable HTTP transport:
 }
 ```
 
+MCP Inspector shortcut:
+
+```bash
+npm run mcp:inspector
+make mcp-inspector
+```
+
+Both commands default to `http://127.0.0.1:3333/mcp`. Override the URL when needed:
+
+```bash
+npm run mcp:inspector -- http://127.0.0.1:3333/mcp
+make mcp-inspector MCP_ADDR=http://127.0.0.1:3333/mcp
+```
+
+The shortcut passes `--transport http --server-url <url>` to `@modelcontextprotocol/inspector`, which is the Inspector CLI form for Streamable HTTP.
+
 Use stdio transport for local process-spawned clients:
 
 ```json

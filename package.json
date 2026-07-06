@@ -12,6 +12,7 @@
     "dev:stdio": "tsx src/stdio.ts",
     "start": "node dist/src/index.js",
     "start:stdio": "node dist/src/stdio.js",
+    "mcp:inspector": "scripts/mcp-inspector.sh",
     "build": "tsc -p tsconfig.json",
     "test": "vitest run",
     "lint": "eslint .",
