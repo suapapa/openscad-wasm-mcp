@@ -156,6 +156,14 @@ Artifacts are written under `/workspace/artifacts` inside the container and `./w
 
 See `.env.example` for runtime configuration.
 
+## License
+
+This project's own source code is released under the MIT License. See [LICENSE](LICENSE).
+
+### License Notes
+
+Runtime dependencies are distributed under their own license terms. The pinned `openscad-wasm` package is currently declared as GPL-2.0, and `sharp` is declared as Apache-2.0. If you redistribute Docker images, bundled `node_modules`, or other packaged builds that include dependencies, review and comply with those dependency licenses in addition to this project's MIT License.
+
 ## openscad-wasm Notes
 
 Integration details for the pinned WASM package are tracked in [docs/openscad-wasm-integration.md](docs/openscad-wasm-integration.md). Remaining follow-up work is tracked in [TODO.md](TODO.md).

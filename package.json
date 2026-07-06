@@ -4,6 +4,7 @@
   "description": "OpenSCAD MCP server powered by openscad-wasm without a native OpenSCAD install.",
   "type": "module",
   "private": true,
+  "license": "MIT",
   "engines": {
     "node": ">=22"
   },
