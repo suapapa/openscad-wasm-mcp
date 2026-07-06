@@ -57,6 +57,7 @@ Environment defaults are documented in `.env.example`:
 - `PUBLIC_BASE_URL=http://127.0.0.1:3333`
 - `PREVIEW_TTL_SECONDS=3600`
 - `PREVIEW_ENABLED=true`
+- `MCP_AUTH_TOKEN` (optional; when set, `/mcp` requires `Authorization: Bearer <token>`)
 
 Docker Compose binds only `127.0.0.1:3333:3333` and uses a read-only root filesystem, `/tmp` tmpfs, `cap_drop: ALL`, and `no-new-privileges`.
 
@@ -107,7 +108,7 @@ Preserve these constraints when adding tools or options:
 
 - `openscad_validate`: returns `ok`, `diagnostics`, `stdout`, `stderr`, `elapsedMs`.
 - `openscad_export_model`: returns artifact metadata for `stl`, `3mf`, `off`, `csg`, `dxf`, or `svg`. STL exports also include `previewUrl`, `modelUrl`, and `expiresAt` when preview links are enabled.
-- `openscad_render_preview`: exports STL and renders a server-side WebP mesh preview. Also returns interactive 3D preview link fields when preview links are enabled.
+- `openscad_render_preview`: when `PREVIEW_ENABLED=true`, exports STL and returns interactive 3D preview link fields. When preview links are disabled, renders a server-side WebP mesh preview instead.
 - `openscad_create_preview_link`: returns `previewUrl`, `modelUrl`, and `expiresAt` for an interactive browser STL viewer on the same HTTP server.
 - `openscad_analyze_model`: exports STL first, then computes bbox and triangle count from ASCII/binary STL. Also returns interactive 3D preview link fields when preview links are enabled.
 - Workspace tools must never read, write, list, or delete outside `WORKSPACE_DIR`.

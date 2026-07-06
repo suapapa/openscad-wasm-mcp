@@ -1,6 +1,9 @@
 import { createToolDependencies } from './app.js';
 import { loadConfig } from './config.js';
+import { loadDotEnv } from './loadEnv.js';
 import { startStreamableHttpServer } from './server/transport.js';
+
+loadDotEnv();
 
 const config = loadConfig();
 const deps = await createToolDependencies(config);

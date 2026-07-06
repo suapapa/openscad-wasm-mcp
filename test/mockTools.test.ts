@@ -85,12 +85,24 @@ describe('mock tool handlers', () => {
     expect(result.previewUrl).toBeUndefined();
   });
 
-  it('renders a WebP preview from the mock STL export', async () => {
+  it('returns an interactive 3D preview link when preview is enabled', async () => {
+    const result = await handleRenderPreview({ scad: 'cube(1);', width: 320, height: 240 }, deps);
+    expect(result.ok).toBe(true);
+    expect(result.artifact?.format).toBe('stl');
+    expect(result.artifact?.mimeType).toBe('model/stl');
+    expect(result.previewUrl).toMatch(/\/viewer\//);
+    expect(result.modelUrl).toMatch(/\/preview\/[0-9a-f-]{36}\/model\.stl$/);
+    expect(result.expiresAt).toBeTruthy();
+  });
+
+  it('renders a WebP preview when interactive preview is disabled', async () => {
+    deps.config.preview.enabled = false;
     const result = await handleRenderPreview({ scad: 'cube(1);', width: 320, height: 240 }, deps);
     expect(result.ok).toBe(true);
     expect(result.artifact?.format).toBe('webp');
     expect(result.artifact?.mimeType).toBe('image/webp');
     expect(result.artifact?.filename).toMatch(/output\.webp$/);
+    expect(result.previewUrl).toBeUndefined();
 
     const artifactPath = path.join(deps.config.paths.workspaceDir, result.artifact?.path ?? '');
     const artifact = await readFile(artifactPath);
@@ -99,7 +111,6 @@ describe('mock tool handlers', () => {
 
     const stats = await sharp(artifact).stats();
     expect(stats.channels.some((channel) => channel.stdev > 0)).toBe(true);
-    expect(result.previewUrl).toMatch(/\/viewer\//);
   });
 
   it('analyzes STL triangle count and bounding box through mock export', async () => {

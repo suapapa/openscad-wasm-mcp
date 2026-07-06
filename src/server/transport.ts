@@ -2,6 +2,7 @@ import { createServer, type Server } from 'node:http';
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
 import { createMcpExpressApp } from '@modelcontextprotocol/sdk/server/express.js';
 import type { AppConfig } from '../config.js';
+import { createMcpAuthMiddleware } from '../security/mcpAuth.js';
 import type { ToolDependencies } from '../tools/index.js';
 import { createMcpServer } from './createMcpServer.js';
 import { registerPreviewRoutes } from './previewRoutes.js';
@@ -18,7 +19,9 @@ export async function startStreamableHttpServer(
 
   registerPreviewRoutes(app, deps);
 
-  app.post('/mcp', async (req, res) => {
+  const requireMcpAuth = createMcpAuthMiddleware(config);
+
+  app.post('/mcp', requireMcpAuth, async (req, res) => {
     const mcpServer = createMcpServer(deps);
     const transport = new StreamableHTTPServerTransport({
       sessionIdGenerator: undefined
@@ -45,7 +48,7 @@ export async function startStreamableHttpServer(
     }
   });
 
-  app.get('/mcp', (_req, res) => {
+  app.get('/mcp', requireMcpAuth, (_req, res) => {
     res.status(405).json({
       jsonrpc: '2.0',
       error: { code: -32000, message: 'Method not allowed. Use POST for stateless MCP calls.' },
@@ -53,7 +56,7 @@ export async function startStreamableHttpServer(
     });
   });
 
-  app.delete('/mcp', (_req, res) => {
+  app.delete('/mcp', requireMcpAuth, (_req, res) => {
     res.status(405).json({
       jsonrpc: '2.0',
       error: { code: -32000, message: 'Method not allowed for stateless MCP.' },

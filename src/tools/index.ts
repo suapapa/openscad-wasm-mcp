@@ -56,7 +56,8 @@ export function registerTools(server: McpServer, deps: ToolDependencies): void {
     'openscad_render_preview',
     {
       title: 'Render OpenSCAD Preview',
-      description: 'Export STL and render a server-side WebP mesh preview.',
+      description:
+        'Export STL and return an interactive 3D preview link when PREVIEW_ENABLED=true, otherwise render a server-side WebP mesh preview.',
       inputSchema: renderPreviewInputSchema.shape
     },
     async (input) => asMcpToolResult(await handleRenderPreview(input, deps))

@@ -23,7 +23,14 @@ const envSchema = z.object({
   PREVIEW_ENABLED: z
     .string()
     .default('true')
-    .transform((value) => value.toLowerCase() === 'true')
+    .transform((value) => value.toLowerCase() === 'true'),
+  MCP_AUTH_TOKEN: z
+    .string()
+    .optional()
+    .transform((value) => {
+      const trimmed = value?.trim();
+      return trimmed ? trimmed : undefined;
+    })
 });
 
 export interface PreviewConfig {
@@ -36,6 +43,7 @@ export interface AppConfig {
   port: number;
   host: string;
   backend: 'wasm' | 'mock';
+  mcpAuthToken?: string;
   paths: WorkspacePaths;
   limits: LimitConfig;
   preview: PreviewConfig;
@@ -56,6 +64,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): AppConfig {
     port: parsed.PORT,
     host: parsed.HOST,
     backend: parsed.OPENSCAD_BACKEND,
+    mcpAuthToken: parsed.MCP_AUTH_TOKEN,
     paths: {
       workspaceDir,
       artifactDir,

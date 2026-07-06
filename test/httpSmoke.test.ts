@@ -99,15 +99,97 @@ describe('Streamable HTTP MCP smoke', () => {
       stderr: ''
     });
   });
+
+  it('rejects /mcp without bearer token when MCP_AUTH_TOKEN is configured', async () => {
+    await server.close();
+    await rm(tempDir, { recursive: true, force: true });
+
+    tempDir = await mkdtemp(path.join(os.tmpdir(), 'openscad-http-auth-'));
+    const config: AppConfig = {
+      port: 0,
+      host: '127.0.0.1',
+      backend: 'mock',
+      mcpAuthToken: 'test-secret',
+      paths: {
+        workspaceDir: path.join(tempDir, 'workspace'),
+        artifactDir: path.join(tempDir, 'workspace', 'artifacts'),
+        jobTmpDir: path.join(tempDir, 'jobs')
+      },
+      limits: {
+        maxRenderMs: 1000,
+        maxOutputBytes: 1024 * 1024,
+        maxInputBytes: 1024 * 1024,
+        maxParallelJobs: 2,
+        cleanupJobs: true
+      },
+      preview: {
+        enabled: true,
+        publicBaseUrl: 'http://127.0.0.1:3333',
+        ttlSeconds: 3600
+      }
+    };
+    const workspace = new WorkspaceManager(config.paths);
+    await workspace.init();
+    const deps: ToolDependencies = {
+      config,
+      runner: new MockOpenScadRunner(),
+      workspace,
+      artifacts: new ArtifactStore(config.paths.artifactDir, config.limits.maxOutputBytes),
+      previewTokens: new PreviewTokenStore(config.preview.ttlSeconds),
+      semaphore: new Semaphore(config.limits.maxParallelJobs)
+    };
+
+    server = await startStreamableHttpServer(config, deps);
+    const address = server.address();
+    if (!address || typeof address === 'string') {
+      throw new Error('Expected test HTTP server to listen on a TCP port.');
+    }
+    url = `http://127.0.0.1:${address.port}/mcp`;
+
+    const unauthorized = await fetch(url, {
+      method: 'POST',
+      headers: {
+        accept: 'application/json, text/event-stream',
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        id: 1,
+        method: 'tools/list',
+        params: {}
+      })
+    });
+
+    expect(unauthorized.status).toBe(401);
+
+    const authorized = await postJsonRpc(
+      {
+        jsonrpc: '2.0',
+        id: 1,
+        method: 'tools/list',
+        params: {}
+      },
+      'test-secret'
+    );
+
+    expect(authorized.result.tools.map((tool: { name: string }) => tool.name)).toContain(
+      'openscad_validate'
+    );
+  });
 });
 
-async function postJsonRpc(body: unknown): Promise<Record<string, any>> {
+async function postJsonRpc(body: unknown, bearerToken?: string): Promise<Record<string, any>> {
+  const headers: Record<string, string> = {
+    accept: 'application/json, text/event-stream',
+    'content-type': 'application/json'
+  };
+  if (bearerToken) {
+    headers.authorization = `Bearer ${bearerToken}`;
+  }
+
   const response = await fetch(url, {
     method: 'POST',
-    headers: {
-      accept: 'application/json, text/event-stream',
-      'content-type': 'application/json'
-    },
+    headers,
     body: JSON.stringify(body)
   });
 

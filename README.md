@@ -25,82 +25,11 @@ OPENSCAD_BACKEND=mock docker compose up --build
 curl -s http://127.0.0.1:3333/healthz
 ```
 
-## Development
-
-Development and agent handoff notes live in [AGENTS.md](AGENTS.md).
-
-## MCP Client Connection
-
-Use Streamable HTTP transport:
-
-```json
-{
-  "mcpServers": {
-    "openscad-wasm": {
-      "url": "http://127.0.0.1:3333/mcp"
-    }
-  }
-}
-```
-
-MCP Inspector shortcut:
-
-```bash
-npm run mcp:inspector
-make mcp-inspector
-```
-
-Both commands default to `http://127.0.0.1:3333/mcp`. Override the URL when needed:
-
-```bash
-npm run mcp:inspector -- http://127.0.0.1:3333/mcp
-make mcp-inspector MCP_ADDR=http://127.0.0.1:3333/mcp
-```
-
-The shortcut passes `--transport http --server-url <url>` to `@modelcontextprotocol/inspector`, which is the Inspector CLI form for Streamable HTTP.
-
-Use stdio transport for local process-spawned clients:
-
-```json
-{
-  "mcpServers": {
-    "openscad-wasm": {
-      "command": "node",
-      "args": ["dist/src/stdio.js"],
-      "env": {
-        "OPENSCAD_BACKEND": "mock"
-      }
-    }
-  }
-}
-```
-
-Build first with `npm run build`, or use `npm run dev:stdio` while developing.
-
-Raw JSON-RPC example:
-
-```bash
-curl -s http://127.0.0.1:3333/mcp \
-  -H 'content-type: application/json' \
-  -d '{
-    "jsonrpc": "2.0",
-    "id": 1,
-    "method": "tools/call",
-    "params": {
-      "name": "openscad_export_model",
-      "arguments": {
-        "scad": "cube([10, 20, 5]);",
-        "format": "stl"
-      }
-    }
-  }'
-```
-
 ## Tools
 
 - `openscad_validate`: validate SCAD and return diagnostics/stdout/stderr.
 - `openscad_export_model`: export `stl`, `3mf`, `off`, `csg`, `dxf`, or `svg`.
-- `openscad_render_preview`: export STL and render a server-side WebP mesh preview.
+- `openscad_render_preview`: export STL and return an interactive 3D preview link when `PREVIEW_ENABLED=true`, otherwise render a server-side WebP mesh preview.
 - `openscad_create_preview_link`: create a browser-viewable interactive STL preview link.
 - `openscad_analyze_model`: export STL, parse ASCII/binary STL, return bounding box and triangle count.
 - `workspace_list_files`: list files under `/workspace`.
@@ -108,25 +37,7 @@ curl -s http://127.0.0.1:3333/mcp \
 - `workspace_write_file`: write an allowed workspace file.
 - `workspace_delete_file`: delete an allowed workspace file.
 
-Example validation payload:
-
-```json
-{
-  "scad": "include <parts/hinge.scad>\nbox_width = 30;\ncube([box_width, 20, 8]);",
-  "files": {
-    "parts/hinge.scad": "// helper file"
-  },
-  "defines": {
-    "box_width": 30,
-    "debug": false,
-    "label": "demo"
-  },
-  "enableManifold": true,
-  "timeoutMs": 30000
-}
-```
-
-Preview requests accept only allowlisted render options: `width`, `height`, comma-separated numeric `camera`, `projection`, `viewAll`, and `autoCenter`. Raw OpenSCAD CLI arguments are not accepted. The preview path asks `openscad-wasm` for STL, then renders the mesh to WebP in-process; it does not depend on OpenSCAD PNG export support.
+Preview requests accept only allowlisted render options: `width`, `height`, comma-separated numeric `camera`, `projection`, `viewAll`, and `autoCenter`. Raw OpenSCAD CLI arguments are not accepted. When `PREVIEW_ENABLED=true`, `openscad_render_preview` exports STL and returns an interactive browser preview link instead of generating WebP. When preview links are disabled, the tool renders the mesh to WebP in-process and does not depend on OpenSCAD PNG export support.
 
 Interactive 3D preview links are served by the same HTTP server:
 
@@ -165,12 +76,13 @@ Artifacts are written under `/workspace/artifacts` inside the container and `./w
 - Each job gets a unique temp directory.
 - Artifacts are stored separately from job temp files.
 - Input/output size limits, render timeout, cleanup option, and a simple semaphore are configured by env vars.
+- Optional `MCP_AUTH_TOKEN` protects `/mcp` with `Authorization: Bearer <token>` when set.
 - Docker Compose uses read-only root filesystem, `/tmp` tmpfs, `cap_drop: ALL`, and `no-new-privileges`.
 - WASM execution runs in a worker thread; timed-out renders terminate the worker instead of blocking the MCP process.
 
 ## Environment
 
-See `.env.example` for runtime configuration.
+See `.env.example` for runtime configuration. Local `npm run dev` and `npm run dev:stdio` load `.env` from the project root when the file exists. Docker Compose also reads `.env` through `env_file`.
 
 ## License
 
@@ -180,9 +92,11 @@ This project's own source code is released under the MIT License. See [LICENSE](
 
 Runtime dependencies are distributed under their own license terms. The pinned `openscad-wasm` package is currently declared as GPL-2.0, and `sharp` is declared as Apache-2.0. If you redistribute Docker images, bundled `node_modules`, or other packaged builds that include dependencies, review and comply with those dependency licenses in addition to this project's MIT License.
 
-## openscad-wasm Notes
+## Documentation
 
-Integration details for the pinned WASM package are tracked in [docs/openscad-wasm-integration.md](docs/openscad-wasm-integration.md). Remaining follow-up work is tracked in [TODO.md](TODO.md).
+- [Development and MCP client setup](docs/development.md)
+- [openscad-wasm integration notes](docs/openscad-wasm-integration.md)
+- [TODO.md](TODO.md)
 
 ## Known Limitations
 

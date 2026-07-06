@@ -53,71 +53,65 @@ export async function handleRenderPreview(
         maxInputBytes: deps.config.limits.maxInputBytes
       });
 
-      const result = await deps.semaphore.run(async () => {
-        const exportResult = await deps.runner.export({
+      const result = await deps.semaphore.run(async () =>
+        deps.runner.export({
           ...input,
           format: 'stl',
           jobId: job.id,
           jobDir: job.dir,
           timeoutMs: input.timeoutMs ?? deps.config.limits.maxRenderMs
-        });
-
-        if (!exportResult.ok) {
-          return exportResult;
-        }
-
-        assertWithinBytes(
-          'Intermediate STL artifact',
-          exportResult.data.byteLength,
-          deps.config.limits.maxOutputBytes
-        );
-
-        let stlArtifact;
-        if (deps.config.preview.enabled) {
-          stlArtifact = await deps.artifacts.saveArtifact({
-            jobId: job.id,
-            suffix: exportResult.filename,
-            format: 'stl',
-            data: exportResult.data
-          });
-        }
-
-        const data = await renderStlPreviewToWebp(exportResult.data, {
-          width: input.width,
-          height: input.height,
-          camera: input.camera,
-          viewAll: input.viewAll,
-          autoCenter: input.autoCenter,
-          projection: input.projection
-        });
-
-        return {
-          ...exportResult,
-          format: 'webp' as const,
-          filename: 'output.webp',
-          data,
-          stlArtifact
-        };
-      });
+        })
+      );
 
       if (!result.ok) {
         return result;
       }
 
-      const stlArtifact = 'stlArtifact' in result ? result.stlArtifact : undefined;
-      const artifact = await deps.artifacts.saveArtifact({
-        jobId: job.id,
-        suffix: result.filename,
-        format: result.format,
-        data: result.data
+      assertWithinBytes(
+        'Intermediate STL artifact',
+        result.data.byteLength,
+        deps.config.limits.maxOutputBytes
+      );
+
+      if (deps.config.preview.enabled) {
+        const artifact = await deps.artifacts.saveArtifact({
+          jobId: job.id,
+          suffix: result.filename,
+          format: 'stl',
+          data: result.data
+        });
+        const preview = await attachStlPreviewLink(deps, artifact);
+
+        return {
+          ok: true,
+          artifact,
+          ...preview,
+          diagnostics: result.diagnostics,
+          stdout: result.stdout,
+          stderr: result.stderr,
+          elapsedMs: result.elapsedMs
+        };
+      }
+
+      const data = await renderStlPreviewToWebp(result.data, {
+        width: input.width,
+        height: input.height,
+        camera: input.camera,
+        viewAll: input.viewAll,
+        autoCenter: input.autoCenter,
+        projection: input.projection
       });
 
-      const preview = stlArtifact ? await attachStlPreviewLink(deps, stlArtifact) : undefined;
+      const artifact = await deps.artifacts.saveArtifact({
+        jobId: job.id,
+        suffix: 'output.webp',
+        format: 'webp',
+        data
+      });
 
       return {
         ok: true,
         artifact,
-        ...preview,
         diagnostics: result.diagnostics,
         stdout: result.stdout,
         stderr: result.stderr,
