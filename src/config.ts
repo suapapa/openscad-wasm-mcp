@@ -17,8 +17,20 @@ const envSchema = z.object({
     .string()
     .default('true')
     .transform((value) => value.toLowerCase() === 'true'),
-  OPENSCAD_BACKEND: z.enum(['wasm', 'mock']).default('wasm')
+  OPENSCAD_BACKEND: z.enum(['wasm', 'mock']).default('wasm'),
+  PUBLIC_BASE_URL: z.string().optional(),
+  PREVIEW_TTL_SECONDS: z.coerce.number().int().positive().default(3600),
+  PREVIEW_ENABLED: z
+    .string()
+    .default('true')
+    .transform((value) => value.toLowerCase() === 'true')
 });
+
+export interface PreviewConfig {
+  enabled: boolean;
+  publicBaseUrl: string;
+  ttlSeconds: number;
+}
 
 export interface AppConfig {
   port: number;
@@ -26,6 +38,7 @@ export interface AppConfig {
   backend: 'wasm' | 'mock';
   paths: WorkspacePaths;
   limits: LimitConfig;
+  preview: PreviewConfig;
 }
 
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): AppConfig {
@@ -33,6 +46,11 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): AppConfig {
   const workspaceDir = path.resolve(parsed.WORKSPACE_DIR);
   const artifactDir = path.resolve(parsed.ARTIFACT_DIR);
   const jobTmpDir = path.resolve(parsed.JOB_TMP_DIR);
+
+  const publicBaseUrl = (parsed.PUBLIC_BASE_URL ?? `http://127.0.0.1:${parsed.PORT}`).replace(
+    /\/$/,
+    ''
+  );
 
   return {
     port: parsed.PORT,
@@ -49,6 +67,11 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): AppConfig {
       maxInputBytes: mbToBytes(parsed.MAX_INPUT_MB),
       maxParallelJobs: parsed.MAX_PARALLEL_JOBS,
       cleanupJobs: parsed.CLEANUP_JOBS
+    },
+    preview: {
+      enabled: parsed.PREVIEW_ENABLED,
+      publicBaseUrl,
+      ttlSeconds: parsed.PREVIEW_TTL_SECONDS
     }
   };
 }

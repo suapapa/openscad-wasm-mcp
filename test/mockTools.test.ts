@@ -16,6 +16,7 @@ import { handleRenderPreview } from '../src/tools/renderPreview.js';
 import { handleValidate } from '../src/tools/validate.js';
 import type { ToolDependencies } from '../src/tools/index.js';
 import { ArtifactStore } from '../src/workspace/artifactStore.js';
+import { PreviewTokenStore } from '../src/preview/PreviewTokenStore.js';
 import { WorkspaceManager } from '../src/workspace/WorkspaceManager.js';
 
 let tempDir: string;
@@ -38,6 +39,11 @@ beforeEach(async () => {
       maxInputBytes: 1024 * 1024,
       maxParallelJobs: 2,
       cleanupJobs: true
+    },
+    preview: {
+      enabled: true,
+      publicBaseUrl: 'http://127.0.0.1:3333',
+      ttlSeconds: 3600
     }
   };
   const workspace = new WorkspaceManager(config.paths);
@@ -47,6 +53,7 @@ beforeEach(async () => {
     runner: new MockOpenScadRunner(),
     workspace,
     artifacts: new ArtifactStore(config.paths.artifactDir, config.limits.maxOutputBytes),
+    previewTokens: new PreviewTokenStore(config.preview.ttlSeconds),
     semaphore: new Semaphore(config.limits.maxParallelJobs)
   };
 });

@@ -101,6 +101,7 @@ curl -s http://127.0.0.1:3333/mcp \
 - `openscad_validate`: validate SCAD and return diagnostics/stdout/stderr.
 - `openscad_export_model`: export `stl`, `3mf`, `off`, `csg`, `dxf`, or `svg`.
 - `openscad_render_preview`: export STL and render a server-side WebP mesh preview.
+- `openscad_create_preview_link`: create a browser-viewable interactive STL preview link.
 - `openscad_analyze_model`: export STL, parse ASCII/binary STL, return bounding box and triangle count.
 - `workspace_list_files`: list files under `/workspace`.
 - `workspace_read_file`: read an allowed workspace file.
@@ -126,6 +127,19 @@ Example validation payload:
 ```
 
 Preview requests accept only allowlisted render options: `width`, `height`, comma-separated numeric `camera`, `projection`, `viewAll`, and `autoCenter`. Raw OpenSCAD CLI arguments are not accepted. The preview path asks `openscad-wasm` for STL, then renders the mesh to WebP in-process; it does not depend on OpenSCAD PNG export support.
+
+Interactive 3D preview links are served by the same HTTP server:
+
+- `GET /viewer/:token` — Three.js STL viewer page
+- `GET /preview/:token/model.stl` — STL model download for the viewer
+
+Use `openscad_create_preview_link` with exactly one of:
+
+- `scad` (+ optional `files`, `defines`, `enableManifold`, `timeoutMs`) to export STL and issue a link
+- `workspacePath` for an existing workspace STL file (for example `models/part.stl`)
+- `artifactPath` for an existing artifact STL (for example `artifacts/job-...-output.stl`)
+
+The tool returns `previewUrl`, `modelUrl`, and `expiresAt`. Open `previewUrl` in a browser while the server is running. Configure `PUBLIC_BASE_URL` when the server is reached through a reverse proxy or a non-default host/port.
 
 ## Artifact Output
 

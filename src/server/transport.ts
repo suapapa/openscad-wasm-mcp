@@ -4,6 +4,7 @@ import { createMcpExpressApp } from '@modelcontextprotocol/sdk/server/express.js
 import type { AppConfig } from '../config.js';
 import type { ToolDependencies } from '../tools/index.js';
 import { createMcpServer } from './createMcpServer.js';
+import { registerPreviewRoutes } from './previewRoutes.js';
 
 export async function startStreamableHttpServer(
   config: AppConfig,
@@ -14,6 +15,8 @@ export async function startStreamableHttpServer(
   app.get('/healthz', (_req, res) => {
     res.json({ ok: true, name: 'openscad-wasm-mcp' });
   });
+
+  registerPreviewRoutes(app, deps);
 
   app.post('/mcp', async (req, res) => {
     const mcpServer = createMcpServer(deps);

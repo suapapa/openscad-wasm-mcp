@@ -41,3 +41,11 @@ export interface AnalyzeSummary {
 export interface AnalyzeToolResult extends ToolRunResult {
   summary: AnalyzeSummary;
 }
+
+export interface PreviewLinkToolResult extends ToolRunResult {
+  previewUrl?: string;
+  modelUrl?: string;
+  expiresAt?: string;
+  format?: string;
+  artifact?: ArtifactMetadata;
+}

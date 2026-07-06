@@ -4,7 +4,9 @@ import type { OpenScadRunner } from '../openscad/OpenScadRunner.js';
 import type { Semaphore } from '../security/limits.js';
 import type { ArtifactStore } from '../workspace/artifactStore.js';
 import type { WorkspaceManager } from '../workspace/WorkspaceManager.js';
+import type { PreviewTokenStore } from '../preview/PreviewTokenStore.js';
 import { handleAnalyzeModel, analyzeModelInputSchema } from './analyzeModel.js';
+import { handleCreatePreviewLink, createPreviewLinkInputSchema } from './createPreviewLink.js';
 import { handleExportModel, exportModelInputSchema } from './exportModel.js';
 import { handleRenderPreview, renderPreviewInputSchema } from './renderPreview.js';
 import { asMcpToolResult } from './toolResponse.js';
@@ -25,6 +27,7 @@ export interface ToolDependencies {
   runner: OpenScadRunner;
   workspace: WorkspaceManager;
   artifacts: ArtifactStore;
+  previewTokens: PreviewTokenStore;
   semaphore: Semaphore;
 }
 
@@ -67,6 +70,17 @@ export function registerTools(server: McpServer, deps: ToolDependencies): void {
       inputSchema: analyzeModelInputSchema.shape
     },
     async (input) => asMcpToolResult(await handleAnalyzeModel(input, deps))
+  );
+
+  server.registerTool(
+    'openscad_create_preview_link',
+    {
+      title: 'Create 3D Preview Link',
+      description:
+        'Create a browser-viewable interactive STL preview link from SCAD, a workspace STL path, or an artifact path.',
+      inputSchema: createPreviewLinkInputSchema.shape
+    },
+    async (input) => asMcpToolResult(await handleCreatePreviewLink(input, deps))
   );
 
   server.registerTool(

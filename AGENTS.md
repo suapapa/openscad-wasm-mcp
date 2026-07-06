@@ -54,6 +54,9 @@ Environment defaults are documented in `.env.example`:
 - `MAX_PARALLEL_JOBS=2`
 - `CLEANUP_JOBS=true`
 - `OPENSCAD_BACKEND=wasm|mock`
+- `PUBLIC_BASE_URL=http://127.0.0.1:3333`
+- `PREVIEW_TTL_SECONDS=3600`
+- `PREVIEW_ENABLED=true`
 
 Docker Compose binds only `127.0.0.1:3333:3333` and uses a read-only root filesystem, `/tmp` tmpfs, `cap_drop: ALL`, and `no-new-privileges`.
 
@@ -97,12 +100,15 @@ Preserve these constraints when adding tools or options:
 - Use per-job temp directories.
 - Store final artifacts under the artifact directory.
 - Enforce input size, output size, timeout, cleanup, and concurrency limits.
+- Preview links must use opaque tokens only; never expose workspace or artifact paths directly in URLs.
+- Preview HTTP routes are disabled when `PREVIEW_ENABLED=false`. Stdio transport can still register preview-link tokens, but browser URLs require the HTTP server.
 
 ## Tool Behavior Expectations
 
 - `openscad_validate`: returns `ok`, `diagnostics`, `stdout`, `stderr`, `elapsedMs`.
 - `openscad_export_model`: returns artifact metadata for `stl`, `3mf`, `off`, `csg`, `dxf`, or `svg`.
-- `openscad_render_preview`: returns a friendly unsupported response when PNG export is unavailable.
+- `openscad_render_preview`: exports STL and renders a server-side WebP mesh preview.
+- `openscad_create_preview_link`: returns `previewUrl`, `modelUrl`, and `expiresAt` for an interactive browser STL viewer on the same HTTP server.
 - `openscad_analyze_model`: exports STL first, then computes bbox and triangle count from ASCII/binary STL.
 - Workspace tools must never read, write, list, or delete outside `WORKSPACE_DIR`.
 

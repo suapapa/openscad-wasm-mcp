@@ -2,22 +2,24 @@ import { mkdtemp, rm } from 'node:fs/promises';
 import type { Server } from 'node:http';
 import os from 'node:os';
 import path from 'node:path';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { AppConfig } from '../src/config.js';
 import { MockOpenScadRunner } from '../src/openscad/MockOpenScadRunner.js';
+import { PreviewTokenStore } from '../src/preview/PreviewTokenStore.js';
 import { Semaphore } from '../src/security/limits.js';
 import { startStreamableHttpServer } from '../src/server/transport.js';
+import { handleCreatePreviewLink } from '../src/tools/createPreviewLink.js';
 import type { ToolDependencies } from '../src/tools/index.js';
 import { ArtifactStore } from '../src/workspace/artifactStore.js';
-import { PreviewTokenStore } from '../src/preview/PreviewTokenStore.js';
 import { WorkspaceManager } from '../src/workspace/WorkspaceManager.js';
 
 let tempDir: string;
 let server: Server;
-let url: string;
+let baseUrl: string;
+let deps: ToolDependencies;
 
 beforeEach(async () => {
-  tempDir = await mkdtemp(path.join(os.tmpdir(), 'openscad-http-smoke-'));
+  tempDir = await mkdtemp(path.join(os.tmpdir(), 'openscad-preview-routes-'));
   const config: AppConfig = {
     port: 0,
     host: '127.0.0.1',
@@ -36,13 +38,13 @@ beforeEach(async () => {
     },
     preview: {
       enabled: true,
-      publicBaseUrl: 'http://127.0.0.1:3333',
+      publicBaseUrl: 'http://127.0.0.1:0',
       ttlSeconds: 3600
     }
   };
   const workspace = new WorkspaceManager(config.paths);
   await workspace.init();
-  const deps: ToolDependencies = {
+  deps = {
     config,
     runner: new MockOpenScadRunner(),
     workspace,
@@ -56,7 +58,8 @@ beforeEach(async () => {
   if (!address || typeof address === 'string') {
     throw new Error('Expected test HTTP server to listen on a TCP port.');
   }
-  url = `http://127.0.0.1:${address.port}/mcp`;
+  baseUrl = `http://127.0.0.1:${address.port}`;
+  deps.config.preview.publicBaseUrl = baseUrl;
 });
 
 afterEach(async () => {
@@ -66,65 +69,39 @@ afterEach(async () => {
   await rm(tempDir, { recursive: true, force: true });
 });
 
-describe('Streamable HTTP MCP smoke', () => {
-  it('lists tools and calls validate through /mcp', async () => {
-    const tools = await postJsonRpc({
-      jsonrpc: '2.0',
-      id: 1,
-      method: 'tools/list',
-      params: {}
-    });
+describe('preview HTTP routes', () => {
+  it('serves viewer and STL model for a registered preview token', async () => {
+    const result = await handleCreatePreviewLink({ scad: 'cube(1);' }, deps);
+    expect(result.ok).toBe(true);
+    expect(result.previewUrl).toMatch(new RegExp(`^${baseUrl}/viewer/`));
+    expect(result.modelUrl).toMatch(new RegExp(`^${baseUrl}/preview/.+/model\\.stl$`));
 
-    expect(tools.result.tools.map((tool: { name: string }) => tool.name)).toContain(
-      'openscad_validate'
-    );
-    expect(tools.result.tools.map((tool: { name: string }) => tool.name)).toContain(
-      'openscad_create_preview_link'
-    );
+    const viewerResponse = await fetch(result.previewUrl!);
+    expect(viewerResponse.status).toBe(200);
+    expect(viewerResponse.headers.get('content-type')).toContain('text/html');
+    const viewerHtml = await viewerResponse.text();
+    expect(viewerHtml).toContain('OpenSCAD 3D Preview');
+    expect(viewerHtml).toContain(result.modelUrl!);
 
-    const validate = await postJsonRpc({
-      jsonrpc: '2.0',
-      id: 2,
-      method: 'tools/call',
-      params: {
-        name: 'openscad_validate',
-        arguments: {
-          scad: 'cube(1);'
-        }
-      }
-    });
+    const modelResponse = await fetch(result.modelUrl!);
+    expect(modelResponse.status).toBe(200);
+    expect(modelResponse.headers.get('content-type')).toBe('model/stl');
+    const modelText = await modelResponse.text();
+    expect(modelText).toContain('solid mock');
+  });
 
-    expect(validate.result.structuredContent).toMatchObject({
-      ok: true,
-      stderr: ''
-    });
+  it('returns 404 for expired preview tokens', async () => {
+    vi.useFakeTimers();
+    deps.previewTokens = new PreviewTokenStore(1);
+    deps.config.preview.ttlSeconds = 1;
+
+    const result = await handleCreatePreviewLink({ scad: 'cube(1);' }, deps);
+    expect(result.ok).toBe(true);
+
+    vi.advanceTimersByTime(2000);
+
+    const modelResponse = await fetch(result.modelUrl!);
+    expect(modelResponse.status).toBe(404);
+    vi.useRealTimers();
   });
 });
-
-async function postJsonRpc(body: unknown): Promise<Record<string, any>> {
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      accept: 'application/json, text/event-stream',
-      'content-type': 'application/json'
-    },
-    body: JSON.stringify(body)
-  });
-
-  expect(response.status).toBe(200);
-  return parseSseJson(await response.text());
-}
-
-function parseSseJson(text: string): Record<string, any> {
-  const data = text
-    .split('\n')
-    .filter((line) => line.startsWith('data:'))
-    .map((line) => line.slice('data:'.length).trim())
-    .join('\n');
-
-  if (!data) {
-    throw new Error(`Expected SSE data line, got: ${text}`);
-  }
-
-  return JSON.parse(data);
-}
