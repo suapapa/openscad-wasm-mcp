@@ -2,7 +2,7 @@ node_modules/
 dist/
 coverage/
 .env
-workspace/
+/workspace
 !.gitkeep
 npm-debug.log*
 .DS_Store
