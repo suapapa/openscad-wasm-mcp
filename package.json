@@ -1,0 +1,41 @@
+{
+  "name": "openscad-wasm-mcp",
+  "version": "0.1.0",
+  "description": "OpenSCAD MCP server powered by openscad-wasm without a native OpenSCAD install.",
+  "type": "module",
+  "private": true,
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "dev:stdio": "tsx src/stdio.ts",
+    "start": "node dist/src/index.js",
+    "start:stdio": "node dist/src/stdio.js",
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "express": "^5.1.0",
+    "mime-types": "^3.0.1",
+    "openscad-wasm": "^0.0.4",
+    "sharp": "^0.35.3",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "@types/express": "^5.0.5",
+    "@types/mime-types": "^3.0.1",
+    "@types/node": "^22.19.1",
+    "eslint": "^9.39.1",
+    "prettier": "^3.6.2",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.46.4",
+    "vitest": "^4.0.8"
+  }
+}

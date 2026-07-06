@@ -1,0 +1,29 @@
+services:
+  openscad-mcp:
+    build: .
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      PORT: ${PORT:-3333}
+      HOST: ${HOST:-0.0.0.0}
+      WORKSPACE_DIR: ${WORKSPACE_DIR:-/workspace}
+      ARTIFACT_DIR: ${ARTIFACT_DIR:-/workspace/artifacts}
+      JOB_TMP_DIR: ${JOB_TMP_DIR:-/tmp/openscad-jobs}
+      MAX_RENDER_MS: ${MAX_RENDER_MS:-30000}
+      MAX_OUTPUT_MB: ${MAX_OUTPUT_MB:-50}
+      MAX_INPUT_MB: ${MAX_INPUT_MB:-10}
+      MAX_PARALLEL_JOBS: ${MAX_PARALLEL_JOBS:-2}
+      CLEANUP_JOBS: ${CLEANUP_JOBS:-true}
+      OPENSCAD_BACKEND: ${OPENSCAD_BACKEND:-wasm}
+    ports:
+      - '127.0.0.1:3333:3333'
+    volumes:
+      - ./workspace:/workspace:rw
+    tmpfs:
+      - /tmp:size=256m
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
