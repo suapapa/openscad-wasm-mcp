@@ -1,10 +1,7 @@
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { createToolDependencies } from './app.js';
 import { loadConfig } from './config.js';
-import { loadDotEnv } from './loadEnv.js';
 import { createMcpServer } from './server/createMcpServer.js';
-
-loadDotEnv();
 
 const config = loadConfig();
 const deps = await createToolDependencies(config);

@@ -1,9 +1,6 @@
 import { createToolDependencies } from './app.js';
 import { loadConfig } from './config.js';
-import { loadDotEnv } from './loadEnv.js';
 import { startStreamableHttpServer } from './server/transport.js';
-
-loadDotEnv();
 
 const config = loadConfig();
 const deps = await createToolDependencies(config);
@@ -20,3 +17,6 @@ process.on('SIGTERM', () => {
 console.log(
   `openscad-wasm-mcp listening on http://${config.host}:${config.port}/mcp using ${config.backend} backend`
 );
+if (config.preview.enabled) {
+  console.log(`Preview links use PUBLIC_BASE_URL=${config.preview.publicBaseUrl}`);
+}

@@ -80,7 +80,10 @@ export async function handleRenderPreview(
           format: 'stl',
           data: result.data
         });
-        const preview = await attachStlPreviewLink(deps, artifact);
+        const preview = await attachStlPreviewLink(deps, artifact, {
+          scad: input.scad,
+          jobId: job.id
+        });
 
         return {
           ok: true,

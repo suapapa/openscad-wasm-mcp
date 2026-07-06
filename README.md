@@ -82,7 +82,7 @@ Artifacts are written under `/workspace/artifacts` inside the container and `./w
 
 ## Environment
 
-See `.env.example` for runtime configuration. Local `npm run dev` and `npm run dev:stdio` load `.env` from the project root when the file exists. Docker Compose also reads `.env` through `env_file`.
+See `.env.example` for runtime configuration. The server reads settings from environment variables only. Docker Compose loads `.env` through `env_file` and `environment`.
 
 ## License
 

@@ -18,7 +18,13 @@ const envSchema = z.object({
     .default('true')
     .transform((value) => value.toLowerCase() === 'true'),
   OPENSCAD_BACKEND: z.enum(['wasm', 'mock']).default('wasm'),
-  PUBLIC_BASE_URL: z.string().optional(),
+  PUBLIC_BASE_URL: z
+    .string()
+    .optional()
+    .transform((value) => {
+      const trimmed = value?.trim();
+      return trimmed ? trimmed : undefined;
+    }),
   PREVIEW_TTL_SECONDS: z.coerce.number().int().positive().default(3600),
   PREVIEW_ENABLED: z
     .string()

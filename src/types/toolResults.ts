@@ -29,6 +29,7 @@ export interface ExportToolResult extends ToolRunResult {
   artifact?: ArtifactMetadata;
   previewUrl?: string;
   modelUrl?: string;
+  scadUrl?: string;
   expiresAt?: string;
 }
 
@@ -45,12 +46,14 @@ export interface AnalyzeToolResult extends ToolRunResult {
   summary: AnalyzeSummary;
   previewUrl?: string;
   modelUrl?: string;
+  scadUrl?: string;
   expiresAt?: string;
 }
 
 export interface PreviewLinkToolResult extends ToolRunResult {
   previewUrl?: string;
   modelUrl?: string;
+  scadUrl?: string;
   expiresAt?: string;
   format?: string;
   artifact?: ArtifactMetadata;

@@ -4,6 +4,7 @@ export interface PreviewTokenEntry {
   absolutePath: string;
   format: string;
   mimeType: string;
+  scadAbsolutePath?: string;
   expiresAt: Date;
 }
 
@@ -16,6 +17,7 @@ export class PreviewTokenStore {
     absolutePath: string;
     format: string;
     mimeType: string;
+    scadAbsolutePath?: string;
   }): { token: string; expiresAt: Date } {
     const token = randomUUID();
     const expiresAt = new Date(Date.now() + this.ttlSeconds * 1000);
@@ -23,6 +25,7 @@ export class PreviewTokenStore {
       absolutePath: input.absolutePath,
       format: input.format,
       mimeType: input.mimeType,
+      scadAbsolutePath: input.scadAbsolutePath,
       expiresAt
     });
     return { token, expiresAt };

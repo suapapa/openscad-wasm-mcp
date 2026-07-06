@@ -82,13 +82,21 @@ describe('preview HTTP routes', () => {
     const viewerHtml = await viewerResponse.text();
     expect(viewerHtml).toContain('OpenSCAD 3D Preview');
     expect(viewerHtml).toContain('Download STL');
+    expect(viewerHtml).toContain('Download SCAD');
     expect(viewerHtml).toContain(result.modelUrl!);
+    expect(viewerHtml).toContain(result.scadUrl!);
 
     const modelResponse = await fetch(result.modelUrl!);
     expect(modelResponse.status).toBe(200);
     expect(modelResponse.headers.get('content-type')).toBe('model/stl');
     const modelText = await modelResponse.text();
     expect(modelText).toContain('solid mock');
+
+    const scadResponse = await fetch(result.scadUrl!);
+    expect(scadResponse.status).toBe(200);
+    expect(scadResponse.headers.get('content-type')).toBe('application/x-openscad');
+    const scadText = await scadResponse.text();
+    expect(scadText).toBe('cube(1);');
   });
 
   it('returns 404 for expired preview tokens', async () => {

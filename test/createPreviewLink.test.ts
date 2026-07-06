@@ -60,6 +60,7 @@ describe('openscad_create_preview_link', () => {
     expect(result.ok).toBe(true);
     expect(result.previewUrl).toMatch(/^http:\/\/127\.0\.0\.1:3333\/viewer\/[0-9a-f-]{36}$/);
     expect(result.modelUrl).toMatch(/\/preview\/[0-9a-f-]{36}\/model\.stl$/);
+    expect(result.scadUrl).toMatch(/\/preview\/[0-9a-f-]{36}\/model\.scad$/);
     expect(result.format).toBe('stl');
     expect(result.expiresAt).toBeTruthy();
     expect(result.artifact?.format).toBe('stl');
@@ -73,6 +74,7 @@ describe('openscad_create_preview_link', () => {
     const result = await handleCreatePreviewLink({ workspacePath: 'models/part.stl' }, deps);
     expect(result.ok).toBe(true);
     expect(result.previewUrl).toMatch(/\/viewer\//);
+    expect(result.scadUrl).toBeUndefined();
     expect(result.artifact?.path).toBe('models/part.stl');
   });
 
@@ -87,6 +89,7 @@ describe('openscad_create_preview_link', () => {
     expect(result.ok).toBe(true);
     expect(result.artifact?.path).toBe(exportResult.artifact?.path);
     expect(result.previewUrl).toMatch(/\/viewer\//);
+    expect(result.scadUrl).toBeUndefined();
   });
 
   it('rejects ambiguous or missing inputs', async () => {

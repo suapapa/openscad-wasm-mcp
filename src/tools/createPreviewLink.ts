@@ -119,6 +119,8 @@ async function createPreviewFromScad(
     return registerPreviewLink({
       deps,
       artifact,
+      scad: input.scad,
+      jobId: job.id,
       diagnostics: result.diagnostics,
       stdout: result.stdout,
       stderr: result.stderr,
@@ -201,12 +203,17 @@ async function registerPreviewLink(input: {
     sizeBytes: number;
     sha256: string;
   };
+  scad?: string;
+  jobId?: string;
   diagnostics: PreviewLinkToolResult['diagnostics'];
   stdout: string;
   stderr: string;
   elapsedMs: number;
 }): Promise<PreviewLinkToolResult> {
-  const preview = await attachStlPreviewLink(input.deps, input.artifact);
+  const preview = await attachStlPreviewLink(input.deps, input.artifact, {
+    scad: input.scad,
+    jobId: input.jobId
+  });
   if (!preview) {
     throw new Error('Failed to create preview link for STL artifact.');
   }
@@ -215,6 +222,7 @@ async function registerPreviewLink(input: {
     ok: true,
     previewUrl: preview.previewUrl,
     modelUrl: preview.modelUrl,
+    scadUrl: preview.scadUrl,
     expiresAt: preview.expiresAt,
     format: 'stl',
     artifact: input.artifact,

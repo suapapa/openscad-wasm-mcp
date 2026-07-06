@@ -76,6 +76,7 @@ describe('mock tool handlers', () => {
     expect(result.artifact?.sha256).toHaveLength(64);
     expect(result.previewUrl).toMatch(/\/viewer\/[0-9a-f-]{36}$/);
     expect(result.modelUrl).toMatch(/\/preview\/[0-9a-f-]{36}\/model\.stl$/);
+    expect(result.scadUrl).toMatch(/\/preview\/[0-9a-f-]{36}\/model\.scad$/);
     expect(result.expiresAt).toBeTruthy();
   });
 
@@ -92,6 +93,7 @@ describe('mock tool handlers', () => {
     expect(result.artifact?.mimeType).toBe('model/stl');
     expect(result.previewUrl).toMatch(/\/viewer\//);
     expect(result.modelUrl).toMatch(/\/preview\/[0-9a-f-]{36}\/model\.stl$/);
+    expect(result.scadUrl).toMatch(/\/preview\/[0-9a-f-]{36}\/model\.scad$/);
     expect(result.expiresAt).toBeTruthy();
   });
 

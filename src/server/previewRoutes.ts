@@ -11,10 +11,15 @@ function isValidToken(token: string): boolean {
   return TOKEN_PATTERN.test(token);
 }
 
-function previewUrls(baseUrl: string, token: string): { previewUrl: string; modelUrl: string } {
+function previewUrls(
+  baseUrl: string,
+  token: string,
+  hasScad = false
+): { previewUrl: string; modelUrl: string; scadUrl?: string } {
   const previewUrl = `${baseUrl}/viewer/${token}`;
   const modelUrl = `${baseUrl}/preview/${token}/model.stl`;
-  return { previewUrl, modelUrl };
+  const scadUrl = hasScad ? `${baseUrl}/preview/${token}/model.scad` : undefined;
+  return { previewUrl, modelUrl, scadUrl };
 }
 
 export { previewUrls };
@@ -26,15 +31,20 @@ export function registerPreviewRoutes(app: Express, deps: ToolDependencies): voi
 
   app.get('/viewer/:token', (req: Request, res: Response) => {
     const token = String(req.params.token);
-    if (!isValidToken(token) || !deps.previewTokens.resolve(token)) {
+    const entry = isValidToken(token) ? deps.previewTokens.resolve(token) : null;
+    if (!entry) {
       res.status(404).type('text/plain').send('Preview not found or expired.');
       return;
     }
 
-    const { modelUrl } = previewUrls(deps.config.preview.publicBaseUrl, token);
+    const { modelUrl, scadUrl } = previewUrls(
+      deps.config.preview.publicBaseUrl,
+      token,
+      Boolean(entry.scadAbsolutePath)
+    );
     res.setHeader('Content-Security-Policy', "default-src 'none'; script-src 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'unsafe-inline'; connect-src 'self'");
     res.setHeader('X-Content-Type-Options', 'nosniff');
-    res.type('html').send(renderViewerPage(modelUrl));
+    res.type('html').send(renderViewerPage(modelUrl, scadUrl));
   });
 
   app.get('/preview/:token/model.stl', async (req: Request, res: Response) => {
@@ -63,6 +73,40 @@ export function registerPreviewRoutes(app: Express, deps: ToolDependencies): voi
       stream.on('error', () => {
         if (!res.headersSent) {
           res.status(500).type('text/plain').send('Failed to read preview model.');
+        }
+      });
+      stream.pipe(res);
+    } catch {
+      res.status(404).type('text/plain').send('Preview not found or expired.');
+    }
+  });
+
+  app.get('/preview/:token/model.scad', async (req: Request, res: Response) => {
+    const token = String(req.params.token);
+    if (!isValidToken(token)) {
+      res.status(404).type('text/plain').send('Preview not found or expired.');
+      return;
+    }
+
+    const entry = deps.previewTokens.resolve(token);
+    if (!entry?.scadAbsolutePath) {
+      res.status(404).type('text/plain').send('SCAD source not available for this preview.');
+      return;
+    }
+
+    try {
+      const fileStats = await stat(entry.scadAbsolutePath);
+      assertWithinBytes('Preview SCAD source', fileStats.size, deps.config.limits.maxInputBytes);
+
+      res.setHeader('Content-Type', 'application/x-openscad');
+      res.setHeader('Content-Length', String(fileStats.size));
+      res.setHeader('Cache-Control', 'no-store');
+      res.setHeader('X-Content-Type-Options', 'nosniff');
+
+      const stream = createReadStream(entry.scadAbsolutePath);
+      stream.on('error', () => {
+        if (!res.headersSent) {
+          res.status(500).type('text/plain').send('Failed to read preview SCAD source.');
         }
       });
       stream.pipe(res);

@@ -13,6 +13,31 @@ export class ArtifactStore {
     private readonly maxOutputBytes: number
   ) {}
 
+  async saveScadArtifact(input: {
+    jobId: string;
+    scad: string;
+    maxBytes: number;
+  }): Promise<ArtifactMetadata> {
+    const data = Buffer.from(input.scad, 'utf8');
+    assertWithinBytes('SCAD source', data.byteLength, input.maxBytes);
+    await mkdir(this.artifactDir, { recursive: true });
+    const artifactRoot = await realpath(this.artifactDir);
+
+    const filename = safeArtifactFilename(input.jobId, 'model.scad');
+    const outputPath = path.join(artifactRoot, filename);
+    await writeFile(outputPath, data, { flag: 'wx' });
+
+    const metadata = await stat(outputPath);
+    return {
+      path: artifactResponsePath(artifactRoot, outputPath),
+      filename,
+      format: 'scad',
+      mimeType: 'application/x-openscad',
+      sizeBytes: metadata.size,
+      sha256: createHash('sha256').update(data).digest('hex')
+    };
+  }
+
   async saveArtifact(input: {
     jobId: string;
     suffix: string;

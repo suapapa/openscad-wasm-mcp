@@ -1,5 +1,9 @@
-export function renderViewerPage(modelUrl: string): string {
+export function renderViewerPage(modelUrl: string, scadUrl?: string): string {
   const escapedModelUrl = JSON.stringify(modelUrl);
+  const escapedScadUrl = scadUrl ? JSON.stringify(scadUrl) : undefined;
+  const scadDownloadLink = scadUrl
+    ? `<a class="download" href=${escapedScadUrl} download="model.scad">Download SCAD</a>`
+    : '';
 
   return `<!doctype html>
 <html lang="en">
@@ -12,17 +16,23 @@ export function renderViewerPage(modelUrl: string): string {
     #app { width: 100%; height: 100%; }
     #status { position: absolute; left: 12px; top: 12px; padding: 8px 12px; background: rgba(0,0,0,.55); border-radius: 6px; font-size: 14px; }
     #status.error { color: #ffb4b4; }
-    #download {
+    #downloads {
       position: absolute; right: 12px; top: 12px;
+      display: flex; gap: 8px;
+    }
+    #downloads .download {
       padding: 8px 14px; background: rgba(0,0,0,.55); border: 1px solid rgba(255,255,255,.2);
       border-radius: 6px; font-size: 14px; color: #eee; text-decoration: none;
     }
-    #download:hover { background: rgba(255,255,255,.12); }
+    #downloads .download:hover { background: rgba(255,255,255,.12); }
   </style>
 </head>
 <body>
   <div id="status">Loading model...</div>
-  <a id="download" href=${escapedModelUrl} download="model.stl">Download STL</a>
+  <div id="downloads">
+    ${scadDownloadLink}
+    <a class="download" href=${escapedModelUrl} download="model.stl">Download STL</a>
+  </div>
   <div id="app"></div>
   <script type="importmap">
     {

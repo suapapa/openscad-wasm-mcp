@@ -63,7 +63,10 @@ export async function handleAnalyzeModel(
         parseStlGeometry(result.data),
         geometryFromOpenScadSummary(result.summary)
       );
-      const preview = await attachStlPreviewLink(deps, artifact);
+      const preview = await attachStlPreviewLink(deps, artifact, {
+        scad: input.scad,
+        jobId: job.id
+      });
 
       return {
         ok: true,
