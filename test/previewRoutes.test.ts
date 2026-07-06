@@ -81,6 +81,7 @@ describe('preview HTTP routes', () => {
     expect(viewerResponse.headers.get('content-type')).toContain('text/html');
     const viewerHtml = await viewerResponse.text();
     expect(viewerHtml).toContain('OpenSCAD 3D Preview');
+    expect(viewerHtml).toContain('Download STL');
     expect(viewerHtml).toContain(result.modelUrl!);
 
     const modelResponse = await fetch(result.modelUrl!);
