@@ -3,9 +3,9 @@ const STORAGE_KEY = "openscad-wasm-mcp-lang";
 
 const translations = {
   en: {
-    "meta.title": "openscad-wasm-mcp — OpenSCAD for AI agents",
+    "meta.title": "openscad-wasm-mcp: OpenSCAD for AI agents",
     "meta.description":
-      "MCP server that runs OpenSCAD through WebAssembly. Generate, preview, and export 3D models from AI agents — no native OpenSCAD install required.",
+      "MCP server that runs OpenSCAD through WebAssembly. Generate, preview, and export 3D models from AI agents without a native OpenSCAD install.",
     "nav.github": "GitHub",
     "nav.docs": "Docs",
     "nav.flow": "Flow",
@@ -13,7 +13,7 @@ const translations = {
     "nav.start": "Start",
     "lang.label": "Language",
     "hero.brand": "openscad-wasm-mcp",
-    "hero.headline": "OpenSCAD for AI agents — no native install",
+    "hero.headline": "OpenSCAD for AI agents, no native install",
     "hero.lead":
       "An MCP server that runs OpenSCAD through WebAssembly in Node.js. Ask an agent for a model, get a preview link and printable STL.",
     "hero.cta.primary": "View on GitHub",
@@ -42,13 +42,13 @@ const translations = {
     "why.kicker": "Why this server",
     "why.title": "WASM OpenSCAD, MCP-shaped",
     "why.lead":
-      "Built for agents that need real geometry tools — not screenshots of a CAD UI.",
+      "Built for agents that need real geometry tools, not screenshots of a CAD UI.",
     "why.1.title": "No host OpenSCAD binary",
     "why.1.body":
       "Runs openscad-wasm in Node.js. Docker Compose is enough to start.",
     "why.2.title": "Allowlisted tool surface",
     "why.2.body":
-      "Validate, export, preview, analyze, and manage workspace files — no shell, no raw CLI args.",
+      "Validate, export, preview, analyze, and manage workspace files. No shell, no raw CLI args.",
     "why.3.title": "Preview links built in",
     "why.3.body":
       "Opaque tokens serve an interactive Three.js viewer from the same HTTP server.",
@@ -70,6 +70,7 @@ const translations = {
       "The service listens on http://127.0.0.1:3333/mcp. Point your MCP client at that URL.",
     "start.copy": "Copy",
     "start.copied": "Copied",
+    "start.copy.fallback": "Select and copy manually",
     "start.note":
       "Optional MCP_AUTH_TOKEN protects /mcp with a Bearer token. See the README for Hermes and other clients.",
     "cta.title": "Build models with your agent",
@@ -80,7 +81,7 @@ const translations = {
     "footer.repo": "suapapa/openscad-wasm-mcp",
   },
   ko: {
-    "meta.title": "openscad-wasm-mcp — AI 에이전트를 위한 OpenSCAD",
+    "meta.title": "openscad-wasm-mcp: AI 에이전트를 위한 OpenSCAD",
     "meta.description":
       "WebAssembly로 OpenSCAD를 돌리는 MCP 서버. AI 에이전트에서 3D 모델을 만들고 미리보고 내보냅니다. 네이티브 OpenSCAD 설치는 필요 없습니다.",
     "nav.github": "GitHub",
@@ -90,7 +91,7 @@ const translations = {
     "nav.start": "시작",
     "lang.label": "언어",
     "hero.brand": "openscad-wasm-mcp",
-    "hero.headline": "AI 에이전트를 위한 OpenSCAD — 네이티브 설치 없이",
+    "hero.headline": "AI 에이전트를 위한 OpenSCAD, 네이티브 설치 없이",
     "hero.lead":
       "Node.js에서 WebAssembly로 OpenSCAD를 돌리는 MCP 서버입니다. 에이전트에게 모델을 요청하면 미리보기 링크와 출력용 STL이 돌아옵니다.",
     "hero.cta.primary": "GitHub에서 보기",
@@ -147,6 +148,7 @@ const translations = {
       "서비스는 http://127.0.0.1:3333/mcp 에서 열려 있습니다. MCP 클라이언트를 이 URL로 연결하세요.",
     "start.copy": "복사",
     "start.copied": "복사됨",
+    "start.copy.fallback": "직접 선택해 복사하세요",
     "start.note":
       "MCP_AUTH_TOKEN을 넣으면 /mcp를 Bearer 토큰으로 막을 수 있습니다. Hermes 등 클라이언트 설정은 README를 보세요.",
     "cta.title": "에이전트로 모델을 만드세요",
@@ -157,9 +159,9 @@ const translations = {
     "footer.repo": "suapapa/openscad-wasm-mcp",
   },
   ja: {
-    "meta.title": "openscad-wasm-mcp — AIエージェント向け OpenSCAD",
+    "meta.title": "openscad-wasm-mcp: AIエージェント向け OpenSCAD",
     "meta.description":
-      "WebAssemblyでOpenSCADを実行するMCPサーバー。AIエージェントから3Dモデルの生成・プレビュー・書き出し — ネイティブOpenSCADのインストール不要。",
+      "WebAssemblyでOpenSCADを実行するMCPサーバー。AIエージェントから3Dモデルの生成・プレビュー・書き出し。ネイティブOpenSCADのインストールは不要です。",
     "nav.github": "GitHub",
     "nav.docs": "ドキュメント",
     "nav.flow": "流れ",
@@ -167,7 +169,7 @@ const translations = {
     "nav.start": "開始",
     "lang.label": "言語",
     "hero.brand": "openscad-wasm-mcp",
-    "hero.headline": "AIエージェント向け OpenSCAD — ネイティブ不要",
+    "hero.headline": "AIエージェント向け OpenSCAD。ネイティブ不要",
     "hero.lead":
       "Node.js上でWebAssembly版OpenSCADを動かすMCPサーバーです。エージェントにモデルを頼めば、プレビューリンクと印刷用STLが返ります。",
     "hero.cta.primary": "GitHubで見る",
@@ -202,7 +204,7 @@ const translations = {
       "Node.jsでopenscad-wasmを実行します。Docker Composeだけで始められます。",
     "why.2.title": "許可リストのツール面",
     "why.2.body":
-      "検証・書き出し・プレビュー・解析・ワークスペース管理 — シェル実行も生のCLI引数もありません。",
+      "検証・書き出し・プレビュー・解析・ワークスペース管理。シェル実行も生のCLI引数もありません。",
     "why.3.title": "プレビューリンク内蔵",
     "why.3.body":
       "不透明トークンで、同じHTTPサーバーからThree.jsインタラクティブビューアを提供します。",
@@ -224,6 +226,7 @@ const translations = {
       "サービスは http://127.0.0.1:3333/mcp で待ち受けます。MCPクライアントをこのURLに向けてください。",
     "start.copy": "コピー",
     "start.copied": "コピー済み",
+    "start.copy.fallback": "手動で選択してコピーしてください",
     "start.note":
       "任意のMCP_AUTH_TOKENで /mcp をBearerトークン保護できます。Hermesなどクライアント設定はREADMEを参照してください。",
     "cta.title": "エージェントでモデルを作る",
@@ -234,9 +237,9 @@ const translations = {
     "footer.repo": "suapapa/openscad-wasm-mcp",
   },
   zh: {
-    "meta.title": "openscad-wasm-mcp — 面向 AI 智能体的 OpenSCAD",
+    "meta.title": "openscad-wasm-mcp: 面向 AI 智能体的 OpenSCAD",
     "meta.description":
-      "通过 WebAssembly 运行 OpenSCAD 的 MCP 服务器。让 AI 智能体生成、预览并导出 3D 模型 — 无需安装原生 OpenSCAD。",
+      "通过 WebAssembly 运行 OpenSCAD 的 MCP 服务器。让 AI 智能体生成、预览并导出 3D 模型，无需安装原生 OpenSCAD。",
     "nav.github": "GitHub",
     "nav.docs": "文档",
     "nav.flow": "流程",
@@ -244,7 +247,7 @@ const translations = {
     "nav.start": "开始",
     "lang.label": "语言",
     "hero.brand": "openscad-wasm-mcp",
-    "hero.headline": "面向 AI 智能体的 OpenSCAD — 无需原生安装",
+    "hero.headline": "面向 AI 智能体的 OpenSCAD，无需原生安装",
     "hero.lead":
       "在 Node.js 中通过 WebAssembly 运行 OpenSCAD 的 MCP 服务器。向智能体描述模型，即可获得预览链接和可打印的 STL。",
     "hero.cta.primary": "在 GitHub 查看",
@@ -273,13 +276,13 @@ const translations = {
     "why.kicker": "为什么选择此服务器",
     "why.title": "WASM OpenSCAD，按 MCP 形态打造",
     "why.lead":
-      "为需要真实几何工具的智能体而建 — 而不是 CAD 界面的截图。",
+      "为需要真实几何工具的智能体而建，而不是 CAD 界面的截图。",
     "why.1.title": "主机无需 OpenSCAD 二进制",
     "why.1.body":
       "在 Node.js 中运行 openscad-wasm。用 Docker Compose 即可启动。",
     "why.2.title": "白名单工具面",
     "why.2.body":
-      "验证、导出、预览、分析与工作区文件管理 — 无 shell，无原始 CLI 参数。",
+      "验证、导出、预览、分析与工作区文件管理。无 shell，无原始 CLI 参数。",
     "why.3.title": "内置预览链接",
     "why.3.body":
       "通过不透明令牌，在同一 HTTP 服务器上提供 Three.js 交互式查看器。",
@@ -301,6 +304,7 @@ const translations = {
       "服务监听 http://127.0.0.1:3333/mcp。将 MCP 客户端指向该 URL。",
     "start.copy": "复制",
     "start.copied": "已复制",
+    "start.copy.fallback": "请手动选择并复制",
     "start.note":
       "可选的 MCP_AUTH_TOKEN 可用 Bearer 令牌保护 /mcp。Hermes 等客户端配置见 README。",
     "cta.title": "用智能体构建模型",
@@ -311,9 +315,9 @@ const translations = {
     "footer.repo": "suapapa/openscad-wasm-mcp",
   },
   pl: {
-    "meta.title": "openscad-wasm-mcp — OpenSCAD dla agentów AI",
+    "meta.title": "openscad-wasm-mcp: OpenSCAD dla agentów AI",
     "meta.description":
-      "Serwer MCP uruchamiający OpenSCAD przez WebAssembly. Generuj, podglądaj i eksportuj modele 3D z agentów AI — bez instalacji natywnego OpenSCAD.",
+      "Serwer MCP uruchamiający OpenSCAD przez WebAssembly. Generuj, podglądaj i eksportuj modele 3D z agentów AI, bez instalacji natywnego OpenSCAD.",
     "nav.github": "GitHub",
     "nav.docs": "Dokumentacja",
     "nav.flow": "Przepływ",
@@ -321,7 +325,7 @@ const translations = {
     "nav.start": "Start",
     "lang.label": "Język",
     "hero.brand": "openscad-wasm-mcp",
-    "hero.headline": "OpenSCAD dla agentów AI — bez natywnej instalacji",
+    "hero.headline": "OpenSCAD dla agentów AI, bez natywnej instalacji",
     "hero.lead":
       "Serwer MCP, który uruchamia OpenSCAD przez WebAssembly w Node.js. Poproś agenta o model, a dostaniesz link do podglądu i drukowalny STL.",
     "hero.cta.primary": "Zobacz na GitHubie",
@@ -350,13 +354,13 @@ const translations = {
     "why.kicker": "Dlaczego ten serwer",
     "why.title": "WASM OpenSCAD w kształcie MCP",
     "why.lead":
-      "Zbudowany dla agentów, które potrzebują prawdziwych narzędzi geometrii — nie zrzutów ekranu UI CAD.",
+      "Zbudowany dla agentów, które potrzebują prawdziwych narzędzi geometrii, nie zrzutów ekranu UI CAD.",
     "why.1.title": "Bez binarki OpenSCAD na hoście",
     "why.1.body":
       "Uruchamia openscad-wasm w Node.js. Wystarczy Docker Compose, by zacząć.",
     "why.2.title": "Powierzchnia narzędzi na białej liście",
     "why.2.body":
-      "Walidacja, eksport, podgląd, analiza i pliki workspace — bez shella i surowych argumentów CLI.",
+      "Walidacja, eksport, podgląd, analiza i pliki workspace. Bez shella i surowych argumentów CLI.",
     "why.3.title": "Wbudowane linki podglądu",
     "why.3.body":
       "Nieprzezroczyste tokeny serwują interaktywny podgląd Three.js z tego samego serwera HTTP.",
@@ -379,8 +383,9 @@ const translations = {
       "Usługa nasłuchuje na http://127.0.0.1:3333/mcp. Skieruj klienta MCP na ten URL.",
     "start.copy": "Kopiuj",
     "start.copied": "Skopiowano",
+    "start.copy.fallback": "Zaznacz i skopiuj ręcznie",
     "start.note":
-      "Opcjonalny MCP_AUTH_TOKEN chroni /mcp tokenem Bearer. Konfiguracja Hermesa i innych klientów — w README.",
+      "Opcjonalny MCP_AUTH_TOKEN chroni /mcp tokenem Bearer. Konfiguracja Hermesa i innych klientów: w README.",
     "cta.title": "Buduj modele z agentem",
     "cta.body":
       "Sklonuj repozytorium, uruchom Compose i podłącz klienta MCP. Kod projektu na licencji MIT.",
@@ -437,9 +442,35 @@ function t(lang, key) {
   return translations[lang]?.[key] ?? translations.en[key] ?? key;
 }
 
+const CJK_FONTS = {
+  ko: "Noto+Sans+KR:wght@400;500;700",
+  ja: "Noto+Sans+JP:wght@400;500;700",
+  zh: "Noto+Sans+SC:wght@400;500;700",
+};
+
+function ensureCjkFont(lang) {
+  const family = CJK_FONTS[lang];
+  const existing = document.getElementById("font-cjk");
+  if (!family) {
+    existing?.remove();
+    return;
+  }
+  const href = `https://fonts.googleapis.com/css2?family=${family}&display=swap`;
+  if (existing) {
+    if (existing.getAttribute("href") !== href) existing.setAttribute("href", href);
+    return;
+  }
+  const link = document.createElement("link");
+  link.id = "font-cjk";
+  link.rel = "stylesheet";
+  link.href = href;
+  document.head.appendChild(link);
+}
+
 function applyTranslations(lang) {
   currentLang = lang;
   document.documentElement.lang = lang === "zh" ? "zh-Hans" : lang;
+  ensureCjkFont(lang);
 
   document.title = t(lang, "meta.title");
   const meta = document.querySelector('meta[name="description"]');

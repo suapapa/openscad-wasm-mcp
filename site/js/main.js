@@ -15,16 +15,20 @@ if (langSelect) {
 
 const copyBtn = document.getElementById("copy-cmd");
 const composeCmd = document.getElementById("compose-cmd");
+const copyStatus = document.getElementById("copy-status");
 
 if (copyBtn && composeCmd) {
   copyBtn.addEventListener("click", async () => {
     const text = composeCmd.textContent?.trim() ?? "";
     const lang = getLang();
+    const copied = t(lang, "start.copied");
     try {
       await navigator.clipboard.writeText(text);
-      copyBtn.textContent = t(lang, "start.copied");
+      copyBtn.textContent = copied;
+      if (copyStatus) copyStatus.textContent = copied;
       window.setTimeout(() => {
         copyBtn.textContent = t(getLang(), "start.copy");
+        if (copyStatus) copyStatus.textContent = "";
       }, 1600);
     } catch {
       const range = document.createRange();
@@ -32,6 +36,7 @@ if (copyBtn && composeCmd) {
       const selection = window.getSelection();
       selection?.removeAllRanges();
       selection?.addRange(range);
+      if (copyStatus) copyStatus.textContent = t(lang, "start.copy.fallback");
     }
   });
 }
@@ -50,6 +55,9 @@ if ("IntersectionObserver" in window) {
     { threshold: 0.16, rootMargin: "0px 0px -6% 0px" },
   );
   revealEls.forEach((el) => observer.observe(el));
+  window.setTimeout(() => {
+    revealEls.forEach((el) => el.classList.add("is-in"));
+  }, 2500);
 } else {
   revealEls.forEach((el) => el.classList.add("is-in"));
 }

@@ -5,14 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="MCP server that runs OpenSCAD through WebAssembly. Generate, preview, and export 3D models from AI agents — no native OpenSCAD install required."
+      content="MCP server that runs OpenSCAD through WebAssembly. Generate, preview, and export 3D models from AI agents without a native OpenSCAD install."
     />
     <meta name="theme-color" content="#0369a1" />
-    <title>openscad-wasm-mcp — OpenSCAD for AI agents</title>
+    <title>openscad-wasm-mcp: OpenSCAD for AI agents</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+      id="font-latin"
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Source+Code+Pro:wght@400;500&family=Source+Sans+3:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./css/styles.css" />
@@ -30,7 +31,20 @@
           else if (lower.indexOf("zh") === 0) lang = "zh";
           else if (lower.indexOf("pl") === 0) lang = "pl";
           else if (lower.indexOf("en") === 0) lang = "en";
-          document.documentElement.lang = lang;
+          document.documentElement.lang = lang === "zh" ? "zh-Hans" : lang;
+
+          var cjk = {
+            ko: "Noto+Sans+KR:wght@400;500;700",
+            ja: "Noto+Sans+JP:wght@400;500;700",
+            zh: "Noto+Sans+SC:wght@400;500;700",
+          };
+          if (cjk[lang]) {
+            var link = document.createElement("link");
+            link.id = "font-cjk";
+            link.rel = "stylesheet";
+            link.href = "https://fonts.googleapis.com/css2?family=" + cjk[lang] + "&display=swap";
+            document.head.appendChild(link);
+          }
         } catch (e) {
           document.documentElement.lang = "en";
         }
@@ -98,9 +112,15 @@
         <div class="hero-media" aria-hidden="true">
           <img
             src="./public/02_open_in_openscad.webp"
-            alt="Cute low-poly rabbit model open in OpenSCAD"
-            width="1920"
-            height="1080"
+            srcset="
+              ./public/02_open_in_openscad-640.webp 640w,
+              ./public/02_open_in_openscad-960.webp 960w,
+              ./public/02_open_in_openscad.webp 1600w
+            "
+            sizes="100vw"
+            alt=""
+            width="1600"
+            height="912"
             fetchpriority="high"
             data-i18n-alt="hero.image.alt"
           />
@@ -110,7 +130,7 @@
             openscad-wasm-mcp
           </p>
           <h1 class="hero-headline" data-i18n="hero.headline">
-            OpenSCAD for AI agents — no native install
+            OpenSCAD for AI agents, no native install
           </h1>
           <p class="hero-lead" data-i18n="hero.lead">
             An MCP server that runs OpenSCAD through WebAssembly in Node.js. Ask
@@ -158,6 +178,12 @@
               <figure class="shot">
                 <img
                   src="./public/00_make_model_with_hermes.webp"
+                  srcset="
+                    ./public/00_make_model_with_hermes-640.webp 640w,
+                    ./public/00_make_model_with_hermes-960.webp 960w,
+                    ./public/00_make_model_with_hermes.webp 1600w
+                  "
+                  sizes="(min-width: 900px) 55vw, 100vw"
                   alt="Hermes Agent chat creating a 3D rabbit model"
                   width="1600"
                   height="1000"
@@ -179,6 +205,12 @@
               <figure class="shot">
                 <img
                   src="./public/01_interactive_preview.webp"
+                  srcset="
+                    ./public/01_interactive_preview-640.webp 640w,
+                    ./public/01_interactive_preview-960.webp 960w,
+                    ./public/01_interactive_preview.webp 1600w
+                  "
+                  sizes="(min-width: 900px) 55vw, 100vw"
                   alt="Interactive 3D preview of an exported STL model"
                   width="1600"
                   height="1000"
@@ -200,6 +232,12 @@
               <figure class="shot">
                 <img
                   src="./public/02_open_in_openscad.webp"
+                  srcset="
+                    ./public/02_open_in_openscad-640.webp 640w,
+                    ./public/02_open_in_openscad-960.webp 960w,
+                    ./public/02_open_in_openscad.webp 1600w
+                  "
+                  sizes="(min-width: 900px) 55vw, 100vw"
                   alt="Generated SCAD source and preview in OpenSCAD"
                   width="1600"
                   height="1000"
@@ -221,6 +259,12 @@
               <figure class="shot">
                 <img
                   src="./public/03_slice_in_prusa.webp"
+                  srcset="
+                    ./public/03_slice_in_prusa-640.webp 640w,
+                    ./public/03_slice_in_prusa-960.webp 960w,
+                    ./public/03_slice_in_prusa.webp 1600w
+                  "
+                  sizes="(min-width: 900px) 55vw, 100vw"
                   alt="Exported STL loaded in PrusaSlicer for 3D printing"
                   width="1600"
                   height="1000"
@@ -236,10 +280,9 @@
       <section class="section" id="why" aria-labelledby="why-title">
         <div class="wrap">
           <header class="section-head">
-            <p class="kicker" data-i18n="why.kicker">Why this server</p>
             <h2 id="why-title" data-i18n="why.title">WASM OpenSCAD, MCP-shaped</h2>
             <p data-i18n="why.lead">
-              Built for agents that need real geometry tools — not screenshots
+              Built for agents that need real geometry tools, not screenshots
               of a CAD UI.
             </p>
           </header>
@@ -255,8 +298,8 @@
             <article class="why-item">
               <h3 data-i18n="why.2.title">Allowlisted tool surface</h3>
               <p data-i18n="why.2.body">
-                Validate, export, preview, analyze, and manage workspace files —
-                no shell, no raw CLI args.
+                Validate, export, preview, analyze, and manage workspace files.
+                No shell, no raw CLI args.
               </p>
             </article>
             <article class="why-item">
@@ -280,7 +323,6 @@
       <section class="section" id="tools" aria-labelledby="tools-title">
         <div class="wrap">
           <header class="section-head">
-            <p class="kicker" data-i18n="tools.kicker">MCP tools</p>
             <h2 id="tools-title" data-i18n="tools.title">What agents can call</h2>
             <p data-i18n="tools.lead">
               Structured tools with Zod-validated inputs and artifact metadata
@@ -332,7 +374,6 @@
       <section class="section" id="start" aria-labelledby="start-title">
         <div class="wrap start-panel">
           <header class="section-head">
-            <p class="kicker" data-i18n="start.kicker">Quick start</p>
             <h2 id="start-title" data-i18n="start.title">
               Up in one Compose command
             </h2>
@@ -351,6 +392,7 @@
             >
               Copy
             </button>
+            <span class="copy-status" id="copy-status" aria-live="polite"></span>
             <pre><code id="compose-cmd">docker compose up --build</code></pre>
           </div>
           <p class="start-note" data-i18n="start.note">
