@@ -1,5 +1,7 @@
 import { detectLang, setLang, t, getLang } from "./i18n.js";
 
+document.documentElement.classList.add("js");
+
 const initialLang = detectLang();
 setLang(initialLang);
 
@@ -34,7 +36,7 @@ if (copyBtn && composeCmd) {
   });
 }
 
-const shots = document.querySelectorAll(".shot");
+const revealEls = document.querySelectorAll(".shot, .why-item");
 if ("IntersectionObserver" in window) {
   const observer = new IntersectionObserver(
     (entries) => {
@@ -45,9 +47,9 @@ if ("IntersectionObserver" in window) {
         }
       }
     },
-    { threshold: 0.18, rootMargin: "0px 0px -8% 0px" },
+    { threshold: 0.16, rootMargin: "0px 0px -6% 0px" },
   );
-  shots.forEach((shot) => observer.observe(shot));
+  revealEls.forEach((el) => observer.observe(el));
 } else {
-  shots.forEach((shot) => shot.classList.add("is-in"));
+  revealEls.forEach((el) => el.classList.add("is-in"));
 }

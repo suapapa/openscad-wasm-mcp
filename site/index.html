@@ -7,12 +7,12 @@
       name="description"
       content="MCP server that runs OpenSCAD through WebAssembly. Generate, preview, and export 3D models from AI agents — no native OpenSCAD install required."
     />
-    <meta name="theme-color" content="#0b6e6e" />
+    <meta name="theme-color" content="#0369a1" />
     <title>openscad-wasm-mcp — OpenSCAD for AI agents</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700&family=Source+Sans+3:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700&family=Space+Grotesk:wght@500;600;700&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./css/styles.css" />
@@ -43,8 +43,29 @@
     <header class="site-header">
       <div class="wrap nav">
         <a class="brand" href="./">
+          <svg class="brand-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <path
+              d="M16 3.5 28 10.5v11L16 28.5 4 21.5v-11L16 3.5Z"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M16 3.5v25M4 10.5l12 7 12-7"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linejoin="round"
+              opacity="0.55"
+            />
+          </svg>
           <span class="brand-text">OpenSCAD WASM MCP</span>
         </a>
+
+        <nav class="nav-links" aria-label="Page">
+          <a href="#flow" data-i18n="nav.flow">Flow</a>
+          <a href="#tools" data-i18n="nav.tools">Tools</a>
+          <a href="#start" data-i18n="nav.start">Start</a>
+        </nav>
 
         <div class="nav-actions">
           <select
@@ -215,6 +236,7 @@
       <section class="section" id="why" aria-labelledby="why-title">
         <div class="wrap">
           <header class="section-head">
+            <p class="kicker" data-i18n="why.kicker">Why this server</p>
             <h2 id="why-title" data-i18n="why.title">WASM OpenSCAD, MCP-shaped</h2>
             <p data-i18n="why.lead">
               Built for agents that need real geometry tools — not screenshots
@@ -258,6 +280,7 @@
       <section class="section" id="tools" aria-labelledby="tools-title">
         <div class="wrap">
           <header class="section-head">
+            <p class="kicker" data-i18n="tools.kicker">MCP tools</p>
             <h2 id="tools-title" data-i18n="tools.title">What agents can call</h2>
             <p data-i18n="tools.lead">
               Structured tools with Zod-validated inputs and artifact metadata
@@ -309,6 +332,7 @@
       <section class="section" id="start" aria-labelledby="start-title">
         <div class="wrap start-panel">
           <header class="section-head">
+            <p class="kicker" data-i18n="start.kicker">Quick start</p>
             <h2 id="start-title" data-i18n="start.title">
               Up in one Compose command
             </h2>
