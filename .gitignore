@@ -6,3 +6,5 @@ coverage/
 !.gitkeep
 npm-debug.log*
 .DS_Store
+.agents
+skills-lock.json
