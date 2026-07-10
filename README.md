@@ -1,109 +1,65 @@
 # openscad-wasm-mcp
 
-OpenSCAD MCP server that runs OpenSCAD through `openscad-wasm` from Node.js/TypeScript. It is designed to run with Docker Compose without installing the native OpenSCAD binary on the host.
+An OpenSCAD Model Context Protocol (MCP) server that runs OpenSCAD in Node.js/TypeScript using WebAssembly (`openscad-wasm`). No native OpenSCAD installation on the host is required.
 
-## Why No Native OpenSCAD Install Is Required
+## Quick Start
 
-The server loads the npm `openscad-wasm` package and calls the OpenSCAD-compatible WASM entry point from Node.js. User SCAD code and supporting files are copied into a per-job workspace, then the runner builds allowlisted OpenSCAD CLI-style arguments internally. No tool accepts arbitrary shell commands or raw OpenSCAD CLI arguments.
+### 1. Run with Docker Compose
 
-The OpenSCAD execution layer is isolated behind a runner interface so WASM package differences can be handled without changing MCP tool contracts.
-
-## Run With Docker Compose
+By default, the server runs in Docker with restricted privileges:
 
 ```bash
 docker compose up --build
 ```
 
-The service listens on `http://127.0.0.1:3333/mcp` from the host. Compose binds only `127.0.0.1:3333:3333`.
+The MCP server listens on `http://127.0.0.1:3333/mcp`.
 
-To override defaults, copy `.env.example` to `.env` and edit values before starting Compose.
+### 2. Configure MCP Client
 
-Mock backend smoke check:
+Add the server to your MCP client configuration (e.g., `claude_desktop_config.json`):
 
-```bash
-OPENSCAD_BACKEND=mock docker compose up --build
-curl -s http://127.0.0.1:3333/healthz
+**Using HTTP Transport (default):**
+```json
+{
+  "mcpServers": {
+    "openscad-wasm": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/client-cli", "http://127.0.0.1:3333/mcp"]
+    }
+  }
+}
 ```
 
-## Tools
+## Available Tools
 
-- `openscad_validate`: validate SCAD and return diagnostics/stdout/stderr.
-- `openscad_export_model`: export `stl`, `3mf`, `off`, `csg`, `dxf`, or `svg`.
-- `openscad_render_preview`: export STL and return an interactive 3D preview link when `PREVIEW_ENABLED=true`, otherwise render a server-side WebP mesh preview.
-- `openscad_create_preview_link`: create a browser-viewable interactive STL preview link.
-- `openscad_analyze_model`: export STL, parse ASCII/binary STL, return bounding box and triangle count.
-- `workspace_list_files`: list files under `/workspace`.
-- `workspace_read_file`: read an allowed workspace file.
-- `workspace_write_file`: write an allowed workspace file.
-- `workspace_delete_file`: delete an allowed workspace file.
+### OpenSCAD Tools
+- `openscad_validate`: Validates SCAD code and returns syntax/logical diagnostics.
+- `openscad_export_model`: Exports model to `stl`, `3mf`, `off`, `csg`, `dxf`, or `svg`.
+- `openscad_render_preview`: Generates a server-side WebP render or an interactive 3D preview link.
+- `openscad_create_preview_link`: Generates a URL to open a browser-based interactive 3D viewer.
+- `openscad_analyze_model`: Computes the model's bounding box and triangle count.
 
-Preview requests accept only allowlisted render options: `width`, `height`, comma-separated numeric `camera`, `projection`, `viewAll`, and `autoCenter`. Raw OpenSCAD CLI arguments are not accepted. When `PREVIEW_ENABLED=true`, `openscad_render_preview` exports STL and returns an interactive browser preview link instead of generating WebP. When preview links are disabled, the tool renders the mesh to WebP in-process and does not depend on OpenSCAD PNG export support.
+### Workspace Tools
+- `workspace_list_files`: Lists files in the container workspace.
+- `workspace_read_file`: Reads a file from the workspace.
+- `workspace_write_file`: Writes a file to the workspace.
+- `workspace_delete_file`: Deletes a file from the workspace.
 
-Interactive 3D preview links are served by the same HTTP server:
+## Artifacts
 
-- `GET /viewer/:token` — Three.js STL viewer page
-- `GET /preview/:token/model.stl` — STL model download for the viewer
+Renders and model exports are saved under `./workspace/artifacts` on the host. The MCP tool responses return metadata: `path`, `filename`, `format`, `mimeType`, `sizeBytes`, and `sha256`.
 
-Use `openscad_create_preview_link` with exactly one of:
+## Configuration
 
-- `scad` (+ optional `files`, `defines`, `enableManifold`, `timeoutMs`) to export STL and issue a link
-- `workspacePath` for an existing workspace STL file (for example `models/part.stl`)
-- `artifactPath` for an existing artifact STL (for example `artifacts/job-...-output.stl`)
-
-The tool returns `previewUrl`, `modelUrl`, and `expiresAt`. Open `previewUrl` in a browser while the server is running. Configure `PUBLIC_BASE_URL` when the server is reached through a reverse proxy or a non-default host/port.
-
-`openscad_export_model` (STL only), `openscad_render_preview`, and `openscad_analyze_model` also include the same preview link fields automatically when `PREVIEW_ENABLED=true`.
-
-## Artifact Output
-
-Artifacts are written under `/workspace/artifacts` inside the container and `./workspace/artifacts` on the host. MCP responses include:
-
-- `path`
-- `filename`
-- `format`
-- `mimeType`
-- `sizeBytes`
-- `sha256`
-
-## Security Limits
-
-- Zod validates all tool inputs.
-- Path traversal, absolute paths, URL-like paths, null bytes, backslashes, and symlink escapes are rejected.
-- Allowed file extensions: `.scad`, `.stl`, `.3mf`, `.off`, `.csg`, `.dxf`, `.svg`, `.png`, `.webp`, `.json`, `.txt`.
-- No shell command execution is exposed.
-- Raw OpenSCAD CLI args are not accepted.
-- `-o`, safe `-D name=value`, and `--enable=manifold` are generated by the args builder.
-- Each job gets a unique temp directory.
-- Artifacts are stored separately from job temp files.
-- Input/output size limits, render timeout, cleanup option, and a simple semaphore are configured by env vars.
-- Optional `MCP_AUTH_TOKEN` protects `/mcp` with `Authorization: Bearer <token>` when set.
-- Docker Compose uses read-only root filesystem, `/tmp` tmpfs, `cap_drop: ALL`, and `no-new-privileges`.
-- WASM execution runs in a worker thread; timed-out renders terminate the worker instead of blocking the MCP process.
-
-## Environment
-
-See `.env.example` for runtime configuration. The server reads settings from environment variables only. Docker Compose loads `.env` through `env_file` and `environment`.
-
-## License
-
-This project's own source code is released under the MIT License. See [LICENSE](LICENSE).
-
-### License Notes
-
-Runtime dependencies are distributed under their own license terms. The pinned `openscad-wasm` package is currently declared as GPL-2.0, and `sharp` is declared as Apache-2.0. If you redistribute Docker images, bundled `node_modules`, or other packaged builds that include dependencies, review and comply with those dependency licenses in addition to this project's MIT License.
-
-## Documentation
-
-- [Development and MCP client setup](docs/development.md)
-- [openscad-wasm integration notes](docs/openscad-wasm-integration.md)
-- [TODO.md](TODO.md)
+Customize runtime limits (memory, timeouts, directories) by copying `.env.example` to `.env` and editing the environment variables.
 
 ## Known Limitations
 
-- Export format support varies by OpenSCAD WASM build.
-- WebP previews are generated from exported STL, so they are intended as shaded mesh previews and do not preserve OpenSCAD color, preview modifiers, GUI overlays, or 2D-only output.
-- Complex models can be slow or memory intensive in WASM.
-- Font behavior depends on files available to the WASM build; this project does not install host fonts or bundle font libraries.
-- `include`, `use`, and `import()` resolve helper files copied into the per-job WASM filesystem.
-- Common OpenSCAD libraries are not bundled; provide required libraries through MCP files or workspace tools.
-- The analyzer prefers OpenSCAD summary-file bounding boxes when available and falls back to STL parsing.
+- **Performance**: Complex models can be slow or memory-intensive inside WebAssembly.
+- **Visuals**: WebP previews do not preserve OpenSCAD colors, GUI helpers, or 2D camera perspectives.
+- **Assets & Libraries**: Fonts and external libraries are not bundled; you must upload necessary files to the workspace first.
+- **Format Support**: Build-specific limits may affect exports (e.g., `3mf` is currently unsupported).
+
+## License
+
+MIT License. See [LICENSE](LICENSE) for details. Dependencies (`openscad-wasm`, `sharp`) carry their own respective licenses.
