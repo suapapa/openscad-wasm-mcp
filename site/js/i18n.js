@@ -33,11 +33,11 @@ const translations = {
     "flow.2.alt": "Interactive 3D preview of an exported STL model",
     "flow.3.title": "Open the SCAD source",
     "flow.3.body":
-      "Keep the generated .scad for editing, versioning, or opening in desktop OpenSCAD.",
+      "Download the generated .scad and open it in desktop OpenSCAD.",
     "flow.3.alt": "Generated SCAD source and preview in OpenSCAD",
     "flow.4.title": "Slice and print",
     "flow.4.body":
-      "Export STL and load it in PrusaSlicer or any slicer that accepts mesh files.",
+      "Download the STL directly and load it in your slicer.",
     "flow.4.alt": "Exported STL loaded in PrusaSlicer for 3D printing",
     "why.kicker": "Why this server",
     "why.title": "WASM OpenSCAD, MCP-shaped",
@@ -111,11 +111,11 @@ const translations = {
     "flow.2.alt": "내보낸 STL 모델의 인터랙티브 3D 미리보기",
     "flow.3.title": "SCAD 소스 열기",
     "flow.3.body":
-      "생성된 .scad는 편집·버전 관리하거나 데스크톱 OpenSCAD에서 열면 됩니다.",
+      "생성된 .scad는 다운로드 받아 데스크톱 OpenSCAD에서 열면 됩니다.",
     "flow.3.alt": "OpenSCAD에서 본 생성된 SCAD 소스와 미리보기",
     "flow.4.title": "슬라이스 후 출력",
     "flow.4.body":
-      "STL을 내보낸 뒤 PrusaSlicer처럼 메시를 읽는 슬라이서에 불러오세요.",
+      "STL을 바로 다운로드 받아 슬라이서에서 불러올 수 있습니다.",
     "flow.4.alt": "3D 출력을 위해 PrusaSlicer에 불러온 STL",
     "why.kicker": "이 서버를 쓰는 이유",
     "why.title": "WASM OpenSCAD, MCP에 맞게",
@@ -189,11 +189,11 @@ const translations = {
     "flow.2.alt": "書き出したSTLモデルのインタラクティブ3Dプレビュー",
     "flow.3.title": "SCADソースを開く",
     "flow.3.body":
-      "生成された.scadを編集・版管理したり、デスクトップOpenSCADで開けます。",
+      "生成された.scadをダウンロードし、デスクトップOpenSCADで開けます。",
     "flow.3.alt": "OpenSCADで表示した生成SCADソースとプレビュー",
     "flow.4.title": "スライスして印刷",
     "flow.4.body":
-      "STLを書き出し、PrusaSlicerなどメッシュ対応スライサーに読み込みます。",
+      "STLをそのままダウンロードして、スライサーに読み込めます。",
     "flow.4.alt": "3D印刷のためPrusaSlicerに読み込んだSTL",
     "why.kicker": "このサーバーを選ぶ理由",
     "why.title": "WASM OpenSCADを、MCPのかたちで",
@@ -267,11 +267,11 @@ const translations = {
     "flow.2.alt": "已导出 STL 模型的交互式 3D 预览",
     "flow.3.title": "打开 SCAD 源文件",
     "flow.3.body":
-      "保留生成的 .scad，便于编辑、版本管理，或在桌面版 OpenSCAD 中打开。",
+      "下载生成的 .scad，并在桌面版 OpenSCAD 中打开。",
     "flow.3.alt": "在 OpenSCAD 中查看生成的 SCAD 源码与预览",
     "flow.4.title": "切片并打印",
     "flow.4.body":
-      "导出 STL，并在 PrusaSlicer 或其他支持网格的切片软件中打开。",
+      "可直接下载 STL，并在切片软件中打开。",
     "flow.4.alt": "为 3D 打印而加载到 PrusaSlicer 中的 STL",
     "why.kicker": "为什么选择此服务器",
     "why.title": "WASM OpenSCAD，按 MCP 形态打造",
@@ -345,11 +345,11 @@ const translations = {
     "flow.2.alt": "Interaktywny podgląd 3D wyeksportowanego modelu STL",
     "flow.3.title": "Otwórz źródło SCAD",
     "flow.3.body":
-      "Zachowaj wygenerowany plik .scad do edycji, wersjonowania lub otwarcia w desktopowym OpenSCAD.",
+      "Pobierz wygenerowany plik .scad i otwórz go w desktopowym OpenSCAD.",
     "flow.3.alt": "Wygenerowane źródło SCAD i podgląd w OpenSCAD",
     "flow.4.title": "Pokrój i drukuj",
     "flow.4.body":
-      "Wyeksportuj STL i wczytaj go w PrusaSlicer lub innym slicerze obsługującym siatki.",
+      "Pobierz STL bezpośrednio i wczytaj go w slicerze.",
     "flow.4.alt": "Wyeksportowany STL wczytany w PrusaSlicer do druku 3D",
     "why.kicker": "Dlaczego ten serwer",
     "why.title": "WASM OpenSCAD w kształcie MCP",
