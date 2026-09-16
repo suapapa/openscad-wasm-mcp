@@ -60,7 +60,8 @@ export function renderViewerPage(modelUrl: string, scadUrl?: string): string {
     scene.background = new THREE.Color(0x1a1a1a);
 
     const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 10000);
-    camera.position.set(120, 90, 120);
+    camera.up.set(0, 0, 1);
+    camera.position.set(120, -140, 100);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setPixelRatio(window.devicePixelRatio);
@@ -72,10 +73,10 @@ export function renderViewerPage(modelUrl: string, scadUrl?: string): string {
 
     scene.add(new THREE.AmbientLight(0xffffff, 0.55));
     const keyLight = new THREE.DirectionalLight(0xffffff, 0.85);
-    keyLight.position.set(1, 1, 1);
+    keyLight.position.set(1, -1.5, 2);
     scene.add(keyLight);
     const fillLight = new THREE.DirectionalLight(0xffffff, 0.35);
-    fillLight.position.set(-1, 0.5, -1);
+    fillLight.position.set(-1, 1, 1);
     scene.add(fillLight);
 
     const loader = new STLLoader();
@@ -93,9 +94,16 @@ export function renderViewerPage(modelUrl: string, scadUrl?: string): string {
         box.getSize(size);
         const maxDim = Math.max(size.x, size.y, size.z, 1);
         const distance = maxDim * 2.2;
-        camera.position.set(distance, distance * 0.75, distance);
+        camera.position.set(distance * 1.1, -distance * 1.3, distance * 0.9);
         controls.target.set(0, 0, 0);
         controls.update();
+
+        const gridSize = Math.max(size.x, size.y, maxDim) * 2.2;
+        const grid = new THREE.GridHelper(gridSize, 20, 0x444444, 0x282828);
+        grid.rotation.x = Math.PI / 2;
+        grid.position.z = -size.z / 2 - Math.max(maxDim * 0.001, 0.01);
+        scene.add(grid);
+
         status.textContent = 'Drag to rotate, scroll to zoom';
       },
       undefined,
