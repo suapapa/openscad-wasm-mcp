@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths:
       - "site/**"
+      - "docker-compose.yml"
+      - ".env.example"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
 
@@ -29,6 +31,11 @@ jobs:
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
+
+      - name: Sync compose and env files to site
+        run: |
+          cp docker-compose_prebuilt.yml site/docker-compose.yml
+          cp .env.example site/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4

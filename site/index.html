@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -22,10 +22,7 @@
     />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta
-      property="og:image:alt"
-      content="Cute low-poly rabbit in OpenSCAD — openscad-wasm-mcp"
-    />
+    <meta property="og:image:alt" content="Cute low-poly rabbit in OpenSCAD — openscad-wasm-mcp" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="openscad-wasm-mcp: OpenSCAD for AI agents" />
     <meta
@@ -48,33 +45,38 @@
     <script>
       (function () {
         try {
-          var key = "openscad-wasm-mcp-lang";
+          var key = 'openscad-wasm-mcp-lang';
           var stored = localStorage.getItem(key);
-          var q = new URLSearchParams(location.search).get("lang");
-          var raw = q || stored || (navigator.languages && navigator.languages[0]) || navigator.language || "en";
+          var q = new URLSearchParams(location.search).get('lang');
+          var raw =
+            q ||
+            stored ||
+            (navigator.languages && navigator.languages[0]) ||
+            navigator.language ||
+            'en';
           var lower = String(raw).toLowerCase();
-          var lang = "en";
-          if (lower.indexOf("ko") === 0) lang = "ko";
-          else if (lower.indexOf("ja") === 0) lang = "ja";
-          else if (lower.indexOf("zh") === 0) lang = "zh";
-          else if (lower.indexOf("pl") === 0) lang = "pl";
-          else if (lower.indexOf("en") === 0) lang = "en";
-          document.documentElement.lang = lang === "zh" ? "zh-Hans" : lang;
+          var lang = 'en';
+          if (lower.indexOf('ko') === 0) lang = 'ko';
+          else if (lower.indexOf('ja') === 0) lang = 'ja';
+          else if (lower.indexOf('zh') === 0) lang = 'zh';
+          else if (lower.indexOf('pl') === 0) lang = 'pl';
+          else if (lower.indexOf('en') === 0) lang = 'en';
+          document.documentElement.lang = lang === 'zh' ? 'zh-Hans' : lang;
 
           var cjk = {
-            ko: "Noto+Sans+KR:wght@400;500;700",
-            ja: "Noto+Sans+JP:wght@400;500;700",
-            zh: "Noto+Sans+SC:wght@400;500;700",
+            ko: 'Noto+Sans+KR:wght@400;500;700',
+            ja: 'Noto+Sans+JP:wght@400;500;700',
+            zh: 'Noto+Sans+SC:wght@400;500;700'
           };
           if (cjk[lang]) {
-            var link = document.createElement("link");
-            link.id = "font-cjk";
-            link.rel = "stylesheet";
-            link.href = "https://fonts.googleapis.com/css2?family=" + cjk[lang] + "&display=swap";
+            var link = document.createElement('link');
+            link.id = 'font-cjk';
+            link.rel = 'stylesheet';
+            link.href = 'https://fonts.googleapis.com/css2?family=' + cjk[lang] + '&display=swap';
             document.head.appendChild(link);
           }
         } catch (e) {
-          document.documentElement.lang = "en";
+          document.documentElement.lang = 'en';
         }
       })();
     </script>
@@ -128,7 +130,18 @@
             rel="noopener noreferrer"
             aria-label="GitHub Repository"
           >
-            <svg class="nav-icon" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M8 0c4.42 0 8 3.58 8 8a8.01 8.01 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.35 3.12.9.01.53.01.98.01 1.2 0 .21-.15.47-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8z"/></svg>
+            <svg
+              class="nav-icon"
+              viewBox="0 0 16 16"
+              width="16"
+              height="16"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                d="M8 0c4.42 0 8 3.58 8 8a8.01 8.01 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.35 3.12.9.01.53.01.98.01 1.2 0 .21-.15.47-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8z"
+              />
+            </svg>
             <span class="btn-nav-label" data-i18n="nav.github">GitHub</span>
           </a>
         </div>
@@ -141,9 +154,9 @@
           <img
             src="./public/02_open_in_openscad.webp"
             srcset="
-              ./public/02_open_in_openscad-640.webp 640w,
-              ./public/02_open_in_openscad-960.webp 960w,
-              ./public/02_open_in_openscad.webp 1600w
+              ./public/02_open_in_openscad-640.webp  640w,
+              ./public/02_open_in_openscad-960.webp  960w,
+              ./public/02_open_in_openscad.webp     1600w
             "
             sizes="100vw"
             alt=""
@@ -154,15 +167,13 @@
           />
         </div>
         <div class="hero-copy">
-          <p class="hero-brand" id="hero-brand" data-i18n="hero.brand">
-            openscad-wasm-mcp
-          </p>
+          <p class="hero-brand" id="hero-brand" data-i18n="hero.brand">openscad-wasm-mcp</p>
           <h1 class="hero-headline" data-i18n="hero.headline">
             OpenSCAD for AI agents, no native install
           </h1>
           <p class="hero-lead" data-i18n="hero.lead">
-            An MCP server that runs OpenSCAD through WebAssembly in Node.js. Ask
-            an agent for a model, get a preview link and printable STL.
+            An MCP server that runs OpenSCAD through WebAssembly in Node.js. Ask an agent for a
+            model, get a preview link and printable STL.
           </p>
           <div class="hero-ctas">
             <a
@@ -184,12 +195,10 @@
         <div class="wrap">
           <header class="section-head">
             <p class="kicker" data-i18n="flow.kicker">From prompt to print</p>
-            <h2 id="flow-title" data-i18n="flow.title">
-              One conversation, a printable model
-            </h2>
+            <h2 id="flow-title" data-i18n="flow.title">One conversation, a printable model</h2>
             <p data-i18n="flow.lead">
-              Connect the server to an MCP client, describe what you want, and
-              walk the result from chat to slicer.
+              Connect the server to an MCP client, describe what you want, and walk the result from
+              chat to slicer.
             </p>
           </header>
 
@@ -199,17 +208,17 @@
                 <span class="step-index">01</span>
                 <h3 data-i18n="flow.1.title">Ask the agent</h3>
                 <p data-i18n="flow.1.body">
-                  Describe a part in natural language. The agent writes OpenSCAD
-                  and calls the MCP tools.
+                  Describe a part in natural language. The agent writes OpenSCAD and calls the MCP
+                  tools.
                 </p>
               </div>
               <figure class="shot">
                 <img
                   src="./public/00_make_model_with_hermes.webp"
                   srcset="
-                    ./public/00_make_model_with_hermes-640.webp 640w,
-                    ./public/00_make_model_with_hermes-960.webp 960w,
-                    ./public/00_make_model_with_hermes.webp 1600w
+                    ./public/00_make_model_with_hermes-640.webp  640w,
+                    ./public/00_make_model_with_hermes-960.webp  960w,
+                    ./public/00_make_model_with_hermes.webp     1600w
                   "
                   sizes="(min-width: 900px) 55vw, 100vw"
                   alt="Hermes Agent chat creating a 3D rabbit model"
@@ -226,17 +235,16 @@
                 <span class="step-index">02</span>
                 <h3 data-i18n="flow.2.title">Preview in the browser</h3>
                 <p data-i18n="flow.2.body">
-                  Interactive STL viewer links let you rotate and zoom before
-                  you download.
+                  Interactive STL viewer links let you rotate and zoom before you download.
                 </p>
               </div>
               <figure class="shot">
                 <img
                   src="./public/01_interactive_preview.webp"
                   srcset="
-                    ./public/01_interactive_preview-640.webp 640w,
-                    ./public/01_interactive_preview-960.webp 960w,
-                    ./public/01_interactive_preview.webp 1600w
+                    ./public/01_interactive_preview-640.webp  640w,
+                    ./public/01_interactive_preview-960.webp  960w,
+                    ./public/01_interactive_preview.webp     1600w
                   "
                   sizes="(min-width: 900px) 55vw, 100vw"
                   alt="Interactive 3D preview of an exported STL model"
@@ -260,9 +268,9 @@
                 <img
                   src="./public/02_open_in_openscad.webp"
                   srcset="
-                    ./public/02_open_in_openscad-640.webp 640w,
-                    ./public/02_open_in_openscad-960.webp 960w,
-                    ./public/02_open_in_openscad.webp 1600w
+                    ./public/02_open_in_openscad-640.webp  640w,
+                    ./public/02_open_in_openscad-960.webp  960w,
+                    ./public/02_open_in_openscad.webp     1600w
                   "
                   sizes="(min-width: 900px) 55vw, 100vw"
                   alt="Generated SCAD source and preview in OpenSCAD"
@@ -278,17 +286,15 @@
               <div class="flow-copy">
                 <span class="step-index">04</span>
                 <h3 data-i18n="flow.4.title">Slice and print</h3>
-                <p data-i18n="flow.4.body">
-                  Download the STL directly and load it in your slicer.
-                </p>
+                <p data-i18n="flow.4.body">Download the STL directly and load it in your slicer.</p>
               </div>
               <figure class="shot">
                 <img
                   src="./public/03_slice_in_prusa.webp"
                   srcset="
-                    ./public/03_slice_in_prusa-640.webp 640w,
-                    ./public/03_slice_in_prusa-960.webp 960w,
-                    ./public/03_slice_in_prusa.webp 1600w
+                    ./public/03_slice_in_prusa-640.webp  640w,
+                    ./public/03_slice_in_prusa-960.webp  960w,
+                    ./public/03_slice_in_prusa.webp     1600w
                   "
                   sizes="(min-width: 900px) 55vw, 100vw"
                   alt="Exported STL loaded in PrusaSlicer for 3D printing"
@@ -308,8 +314,7 @@
           <header class="section-head">
             <h2 id="why-title" data-i18n="why.title">WASM OpenSCAD, MCP-shaped</h2>
             <p data-i18n="why.lead">
-              Built for agents that need real geometry tools, not screenshots
-              of a CAD UI.
+              Built for agents that need real geometry tools, not screenshots of a CAD UI.
             </p>
           </header>
 
@@ -317,29 +322,27 @@
             <article class="why-item">
               <h3 data-i18n="why.1.title">No host OpenSCAD binary</h3>
               <p data-i18n="why.1.body">
-                Runs openscad-wasm in Node.js. Docker Compose is enough to
-                start.
+                Runs openscad-wasm in Node.js. Docker Compose is enough to start.
               </p>
             </article>
             <article class="why-item">
               <h3 data-i18n="why.2.title">Allowlisted tool surface</h3>
               <p data-i18n="why.2.body">
-                Validate, export, preview, analyze, and manage workspace files.
-                No shell, no raw CLI args.
+                Validate, export, preview, analyze, and manage workspace files. No shell, no raw CLI
+                args.
               </p>
             </article>
             <article class="why-item">
               <h3 data-i18n="why.3.title">Preview links built in</h3>
               <p data-i18n="why.3.body">
-                Opaque tokens serve an interactive Three.js viewer from the same
-                HTTP server.
+                Opaque tokens serve an interactive Three.js viewer from the same HTTP server.
               </p>
             </article>
             <article class="why-item">
               <h3 data-i18n="why.4.title">Hardened by default</h3>
               <p data-i18n="why.4.body">
-                Path safety, size limits, timeouts, concurrency caps, and a
-                locked-down Compose setup.
+                Path safety, size limits, timeouts, concurrency caps, and a locked-down Compose
+                setup.
               </p>
             </article>
           </div>
@@ -351,8 +354,7 @@
           <header class="section-head">
             <h2 id="tools-title" data-i18n="tools.title">What agents can call</h2>
             <p data-i18n="tools.lead">
-              Structured tools with Zod-validated inputs and artifact metadata
-              in responses.
+              Structured tools with Zod-validated inputs and artifact metadata in responses.
             </p>
           </header>
 
@@ -377,9 +379,7 @@
             </li>
             <li>
               <span class="tool-name">openscad_create_preview_link</span>
-              <span class="tool-desc" data-i18n="tools.link"
-                >Create a browser STL viewer link</span
-              >
+              <span class="tool-desc" data-i18n="tools.link">Create a browser STL viewer link</span>
             </li>
             <li>
               <span class="tool-name">openscad_analyze_model</span>
@@ -400,30 +400,73 @@
       <section class="section" id="start" aria-labelledby="start-title">
         <div class="wrap start-panel">
           <header class="section-head">
-            <h2 id="start-title" data-i18n="start.title">
-              Up in one Compose command
-            </h2>
+            <h2 id="start-title" data-i18n="start.title">Start the MCP service in one command</h2>
             <p data-i18n="start.lead">
-              The service listens on http://127.0.0.1:3333/mcp. Point your MCP
-              client at that URL.
+              The service listens on http://127.0.0.1:3333/mcp. Point your MCP client at that URL.
             </p>
           </header>
 
           <div class="code-block">
-            <button
-              type="button"
-              class="copy-btn"
-              id="copy-cmd"
-              data-i18n="start.copy"
-            >
+            <button type="button" class="copy-btn" id="copy-cmd" data-i18n="start.copy">
               Copy
             </button>
             <span class="copy-status" id="copy-status" aria-live="polite"></span>
             <pre><code id="compose-cmd">docker compose up --build</code></pre>
           </div>
-          <p class="start-note" data-i18n="start.note">
-            Optional MCP_AUTH_TOKEN protects /mcp with a Bearer token. See the
-            README for Hermes and other clients.
+          <div class="start-downloads">
+            <a
+              class="btn btn-ghost start-download-btn"
+              href="./docker-compose.yml"
+              download="docker-compose.yml"
+            >
+              <svg
+                class="btn-icon"
+                viewBox="0 0 24 24"
+                width="16"
+                height="16"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              <span data-i18n="start.download.compose">Download docker-compose.yml</span>
+            </a>
+            <a
+              class="btn btn-ghost start-download-btn"
+              href="./.env.example"
+              download=".env.example"
+            >
+              <svg
+                class="btn-icon"
+                viewBox="0 0 24 24"
+                width="16"
+                height="16"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              <span data-i18n="start.download.env">Download .env.example</span>
+            </a>
+          </div>
+          <p class="start-note" data-i18n-html="start.note">
+            See the
+            <a href="https://github.com/suapapa/openscad-wasm-mcp#readme" rel="noopener noreferrer"
+              >README</a
+            >
+            for how to add this MCP to AI agents like Hermes Agent.
           </p>
         </div>
       </section>
@@ -433,8 +476,7 @@
           <div class="cta-panel">
             <h2 data-i18n="cta.title">Build models with your agent</h2>
             <p data-i18n="cta.body">
-              Clone the repo, start Compose, and connect an MCP client.
-              MIT-licensed project source.
+              Clone the repo, start Compose, and connect an MCP client. MIT-licensed project source.
             </p>
             <a
               class="btn btn-primary"
