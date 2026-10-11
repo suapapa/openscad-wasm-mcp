@@ -66,4 +66,10 @@ describe('site assets and compose download links', () => {
       expect(noteHtml).toContain('Hermes');
     }
   });
+
+  it('ensures start panel header and note do not have restrictive max-width in styles.css', () => {
+    const css = readFileSync(resolve(siteDir, 'css/styles.css'), 'utf-8');
+    expect(css).toMatch(/\.start-panel \.section-head\s*\{[^}]*max-width:\s*none/);
+    expect(css).toMatch(/\.start-note\s*\{[^}]*max-width:\s*none/);
+  });
 });

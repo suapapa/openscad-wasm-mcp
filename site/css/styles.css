@@ -346,7 +346,7 @@ button {
   margin-left: max(1rem, calc((100% - var(--max)) / 2));
   padding: 5.5rem 0 3.75rem;
   color: var(--hero-fg);
-  max-width: 38rem;
+  max-width: 44rem;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -396,7 +396,7 @@ button {
 
 .hero-lead {
   margin: 0 0 1.7rem;
-  max-width: 32rem;
+  max-width: 42rem;
   color: var(--hero-muted);
   font-size: 1.05rem;
   text-wrap: pretty;
@@ -425,7 +425,7 @@ button {
 }
 
 .section-head {
-  max-width: 38rem;
+  max-width: 52rem;
   margin-bottom: 2.75rem;
 }
 
@@ -476,7 +476,7 @@ button {
 }
 
 .flow-copy {
-  max-width: 26rem;
+  max-width: 30rem;
   min-width: 0;
 }
 
@@ -581,7 +581,7 @@ button {
 .why-item p {
   margin: 0;
   color: var(--ink-soft);
-  max-width: 34rem;
+  max-width: none;
   overflow-wrap: anywhere;
 }
 
@@ -642,6 +642,7 @@ button {
 }
 
 .start-panel .section-head {
+  max-width: none;
   margin-bottom: 0;
 }
 
@@ -733,7 +734,7 @@ button {
 .start-note {
   margin: 0;
   color: var(--ink-soft);
-  max-width: 42rem;
+  max-width: none;
   font-size: 0.95rem;
   overflow-wrap: anywhere;
 }
